@@ -31,12 +31,15 @@ function OwnMarine:provide_steps(prev)
 	print (marineX-1)
 
 	nearestWeapon = getNearestWeapon(marine)
+	nearestEnemy = getNearestEnemy(marine)
 	print("weapon: " .. nearestWeapon.Type .. ", (x: " .. nearestWeapon.Bounds.X, " y: " .. nearestWeapon.Bounds.Y .. ")")
+	print("enemy: " .. nearestEnemy.Type .. ", (x: " .. nearestEnemy.Bounds.X, " y: " .. nearestEnemy.Bounds.Y .. ")")
 
 	-- if return is not empty, has a {Command = "attack", Aimed="false", Target={ X = 1, Y = 4 }}
 	-- auto equips weapons :)
 	-- shoot(marine, x, y, availableWeapons)
-	return { {Command = "move", Path = { { X = marineX-1, Y = marineY } } }, Command = "done" }
+	--return { {Command = "move", Path = { { X = marineX-1, Y = marineY } } }, Command = "done" }
+	return {Command = "done" }
 end
 
 function OwnMarine:on_aiming(attack) end
