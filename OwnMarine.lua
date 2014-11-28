@@ -1,3 +1,4 @@
+require 'Shooter.shoot'
 OwnMarine = class( "Marine" )
 
 function OwnMarine:initialize(player_index, marine_id, instance_index)
