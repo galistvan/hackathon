@@ -59,8 +59,6 @@ function OwnMarine:on_dodging(attack) end
 function OwnMarine:on_knockback(attack, entity) end
 
 function OwnMarine:isIHaveThatWeapon(nearestWeapon) 
-	print("available weapons: " )
-	printTable(self.availableWeapons)
 	for _,v in pairs(self.availableWeapons) do
 	  if v == nearestWeapon then
 		return true
@@ -78,18 +76,19 @@ end
 
 function OwnMarine:HandleEvents(name, event) 
 	if name == "EntityPickingUpItem" then
-		print("received item" .. event.Item)
-		print(tostring(name))
-		print(tostring(event))
+		print("picking up item: " .. event.Item)
 		table.insert(self.availableWeapons, event.Item)
+		print("currently available weapons: " )
+		printTable(self.availableWeapons)
 	else 
 		if name == "EntityLostItem" then
-			print("lost item" .. event.Item)
-			print(tostring(name))
-			print(tostring(event))
+			print("lost item: " .. event.Item)
 			table.remove(self.availableWeapons, event.Item)
+			print("currently available weapons: " )
+			printTable(self.availableWeapons)
 		end
 	end
+
 end
 
 function printTable(table) 

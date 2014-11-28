@@ -1,13 +1,11 @@
 
 function doWeaponPickUp(marine, marineEntity, nearestWeapon)
-    print("weapon: " .. nearestWeapon.Type .. ", (x: " .. nearestWeapon.Bounds.X, " y: " .. nearestWeapon.Bounds.Y .. ")")
     if (isStandAboveAWeapon(marineEntity) and not marine:isIHaveThatWeapon(nearestWeapon))then
       return { Command = "pickup" }
     end
     weaponPath = Game.Map:get_move_path(marineEntity.Id, nearestWeapon.Bounds.X, nearestWeapon.Bounds.Y)
     movePath = getFirstNItemsFromList(marineEntity.MovePoints, weaponPath)
     print(lengthOfArray(movePath))
-    print("insert command move")
     return { Command = "move", Path = movePath  }
 
 end
@@ -34,22 +32,17 @@ function getNearestWeapon(marineEntity)
 	gameEntities = Game.Map:entities_in(0, 0, Game.Map.width, Game.Map.height)
 	nearestWeapon = nil
 	shortestPath = -1
-	print("searching weapons...")
+	print("searching nearest weapon...")
 	for _, v in pairs(gameEntities) do
 		if isWeapon(v) then
-			print("weapon found " .. tostring(v.Type))
 			if nearestWeapon == nil then
 				currentPath = Game.Map:get_move_path(marineEntity.Id, v.Bounds.X, v.Bounds.Y)
 				if lengthOfArray(currentPath) > 0 then
 					nearestWeapon = v
-					print(tostring(marineEntity))
-					print(tostring(v.Bounds.X))
-					print(tostring(v.Bounds.Y))
 					shortestPath = currentPath
 				end 
 			else
 		 		local currentPath = Game.Map:get_move_path(marineEntity.Id, v.Bounds.X, v.Bounds.Y)
-				print (lengthOfArray(currentPath))
 				if lengthOfArray(currentPath) < lengthOfArray(shortestPath) and lengthOfArray(currentPath) > 0 then
 					nearestWeapon = v
 					shortestPath = currentPath
@@ -57,9 +50,7 @@ function getNearestWeapon(marineEntity)
 			end
 		end
 	end
-	print("marine: " .. marineEntity.Bounds.X, marineEntity.Bounds.Y)
-	print("weapon: " .. nearestWeapon.Bounds.X, nearestWeapon.Bounds.Y)
-	print("path = " .. lengthOfArray(shortestPath))
+	print("nearest weapon: " .. nearestWeapon.Type .. " (X:".. nearestWeapon.Bounds.X  .. ",Y:"..  nearestWeapon.Bounds.Y .. "), path length:" .. lengthOfArray(shortestPath))
 	return nearestWeapon
 end
 
@@ -87,13 +78,11 @@ end
 
 function isStandAboveAWeapon(marine) 
   entities = Game.Map:entities_in(marine.Bounds.X, marine.Bounds.Y, 1, 1)
-  print("weapon check")
   for _, v in pairs(entities) do
     if isWeapon(v) then
-      print("weapon check end true")
+      print("we are standing above weapon: " .. v.Type)
       return true
     end
   end
-  print("weapon check end")
   return false
 end
