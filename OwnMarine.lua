@@ -37,9 +37,13 @@ function OwnMarine:provide_steps(prev)
 
 	-- if return is not empty, has a {Command = "attack", Aimed="false", Target={ X = 1, Y = 4 }}
 	-- auto equips weapons :)
-	table.insert(Command, equipWeapon(marine, marine.Bounds.X, marine.Bounds.Y, availableWeapons))
+	table.insert(Command, equipWeapon(marine, marine.Bounds.X, marine.Bounds.Y, availableWeapons, availableAmmo))
 	table.insert(Command, shootWeapon(marine, marine.Bounds.X, marine.Bounds.Y))
-  print(Command[1])
+	
+	-- so, call this if we only moved once or call 2 times if we can.
+	
+	
+	
 	return Command
 end
 
