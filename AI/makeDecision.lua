@@ -3,12 +3,12 @@ function makeDecision(marine, availableWeapons, availableItems, availableAmmo, n
     if (lengthOfArray(availableWeapons) <= 1) then
         action[1]="pickUpWeapon"
         action[2]="";
-      elseif(enemyNotInLineOfSight(marine, availableWeapons, availableItems, availableAmmo, nearestEnemy, nearestWeapon)) then 
+      elseif(not enemyInSight(marine, availableWeapons, availableItems, availableAmmo, nearestEnemy, nearestWeapon)) then 
         action[1]="move"
         action[2]=enemyCoordinates(marine, availableWeapons, availableItems, availableAmmo, nearestEnemy, nearestWeapon)
       else
         action[1]="attack"
-        action[2]=""
+        action[2]=enemyCoordinates(marine, availableWeapons, availableItems, availableAmmo, nearestEnemy, nearestWeapon)
       end
   return action
 end
