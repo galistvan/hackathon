@@ -29,6 +29,10 @@ function OwnMarine:provide_steps(prev)
 	local marineY = getMarineCoordY(marine)
 	print("x: " .. marine.Bounds.X .. ", y: " .. marine.Bounds.Y)
 	print (marineX-1)
+
+	nearestWeapon = getNearestWeapon(marine)
+	print("weapon: " .. nearestWeapon.Type .. ", (x: " .. nearestWeapon.Bounds.X, " y: " .. nearestWeapon.Bounds.Y .. ")")
+
 	-- if return is not empty, has a {Command = "attack", Aimed="false", Target={ X = 1, Y = 4 }}
 	-- auto equips weapons :)
 	-- shoot(marine, x, y, availableWeapons)
