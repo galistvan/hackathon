@@ -26,6 +26,9 @@ function OwnMarine:provide_steps(prev)
 	local marineY = getMarineCoordY(marine)
 	print("x: " .. marine.Bounds.X .. ", y: " .. marine.Bounds.Y)
 	print (marineX-1)
+	-- if return is not empty, has a {Command = "attack", Aimed="false", Target={ X = 1, Y = 4 }}
+	-- auto equips weapons :)
+	-- shoot(marine, x, y)
 	return { {Command = "move", Path = { { X = marineX-1, Y = marineY } } }, Command = "done" }
 end
 
