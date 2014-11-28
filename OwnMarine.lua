@@ -1,7 +1,8 @@
 require 'Shooter.shoot'
 OwnMarine = class( "Marine" )
-availableWeapons = {}
+availableWeapons = {"w_fist"}
 availableItems = {}
+availableAmmo = {}
 
 function OwnMarine:initialize(player_index, marine_id, instance_index)
     self.player_index = player_index
