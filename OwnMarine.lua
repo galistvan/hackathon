@@ -1,4 +1,6 @@
 require 'Shooter.shoot'
+require 'AI.makeDecision'
+require 'Mappers.weaponsearch'
 
 OwnMarine = class( "Marine" )
 
@@ -30,33 +32,18 @@ function OwnMarine:provide_steps(prev)
 	marine = self:get_marine()
 	local marineX = getMarineCoordX(marine)
 	local marineY = getMarineCoordY(marine)
+  nearestEnemy = getNearestEnemy(marine)
+  nearestWeapon = getNearestWeapon(marine)
 
-	if (lengthOfArray(self.availableWeapons) <= 1) then -- find a weapon
-		nearestWeapon = getNearestWeapon(marine)
-		print("weapon: " .. nearestWeapon.Type .. ", (x: " .. nearestWeapon.Bounds.X, " y: " .. nearestWeapon.Bounds.Y .. ")")
+  whatTodo = makeDecision(marine, self.availableWeapons, self.availabeItems, self.availableAmmo, nearestEnemy, nearestWeapon)
 
-		if (isStandAboveAWeapon(marine) and self:isIHaveThatWeapon(nearestWeapon))then
-			print("picking up")
-			table.insert(Commands, { Command = "pickup" } )
-		end
-		weaponPath = Game.Map:get_move_path(marine.Id, nearestWeapon.Bounds.X, nearestWeapon.Bounds.Y)
-		movePath = getFirstNItemsFromList(marine.MovePoints, weaponPath)
-		print(lengthOfArray(movePath))
-		print("insert command move")
-		table.insert(Commands, { Command = "move", Path = movePath  } )
-		print("inserted command move")
 
-	else -- kill someone
-		nearestEnemy = getNearestEnemy(marine)
-		print("enemy: " .. nearestEnemy.Type .. ", (x: " .. nearestEnemy.Bounds.X, " y: " .. nearestEnemy.Bounds.Y .. ")")
-		-- if return is not empty, has a {Command = "attack", Aimed="false", Target={ X = 1, Y = 4 }}
-		-- auto equips weapons :)
-		table.insert(Commands, equipWeapon(marine, marine.Bounds.X, marine.Bounds.Y, self.availableWeapons, self.availableAmmo))
-		table.insert(Commands, shootWeapon(marine, marine.Bounds.X, marine.Bounds.Y))
-	
-		-- so, call this if we only moved once or call 2 times if we can.
-	end
-
+  if whatTodo == "pickUpWeapon" then
+    table.insert(Commands, doWeaponPickUp(marine))
+  elseif whatTodo == "attack" then
+    table.insert(Commands, equipWeapon(marine, marine.Bounds.X, marine.Bounds.Y, self.availableWeapons, self.availableAmmo))
+    table.insert(Commands, shootWeapon(marine, marine.Bounds.X, marine.Bounds.Y))
+  end
 	return Commands
 end
 
@@ -79,27 +66,6 @@ function getMarineCoordX(marine)
 end
 function getMarineCoordY(marine)
 	return marine.Bounds.Y
-end
-
-function getFirstNItemsFromList(n, list)
-	resultList = {}
-	for i=1,n do 
-		table.insert(resultList,list[i])
-	end
-	return resultList
-end
-
-function isStandAboveAWeapon(marine) 
-	entities = Game.Map:entities_in(marine.Bounds.X, marine.Bounds.Y, 1, 1)
-	print("weapon check")
-	for _, v in pairs(entities) do
-		if isWeapon(v) then
-			print("weapon check end true")
-			return true
-		end
-	end
-	print("weapon check end")
-	return false
 end
 
 function OwnMarine:when_other_marine_pickingupitem(other, event, prev) 
