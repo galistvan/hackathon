@@ -25,11 +25,10 @@ function OwnMarine:select_mode()
 end
 
 function OwnMarine:provide_steps(prev)
+  Command = {}
 	marine = self:get_marine()
 	local marineX = getMarineCoordX(marine)
 	local marineY = getMarineCoordY(marine)
-	print("x: " .. marine.Bounds.X .. ", y: " .. marine.Bounds.Y)
-	print (marineX-1)
 
 	nearestWeapon = getNearestWeapon(marine)
 	nearestEnemy = getNearestEnemy(marine)
@@ -38,9 +37,10 @@ function OwnMarine:provide_steps(prev)
 
 	-- if return is not empty, has a {Command = "attack", Aimed="false", Target={ X = 1, Y = 4 }}
 	-- auto equips weapons :)
-	attackcommand = shoot(marine, marine.Bounds.X, marine.Bounds.Y, availableWeapons)
-	print (attackcommand)
-	return { attackcommand, {Command = "move", Path = { { X = marineX-1, Y = marineY } } }, Command = "done" }
+	table.insert(Command, equipWeapon(marine, marine.Bounds.X, marine.Bounds.Y, availableWeapons))
+	table.insert(Command, shootWeapon(marine, marine.Bounds.X, marine.Bounds.Y))
+  print(Command[1])
+	return Command
 end
 
 function OwnMarine:on_aiming(attack) end
