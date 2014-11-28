@@ -1,14 +1,14 @@
 require 'Shooter.shoot'
 
 OwnMarine = class( "Marine" )
-availableWeapons = {"w_hand"}
-availableItems = {}
-availableAmmo = {}
 
 function OwnMarine:initialize(player_index, marine_id, instance_index)
     self.player_index = player_index
     self.marine_id = marine_id
     self.instance_index = instance_index
+    self.availableWeapons = {"w_hand"}
+    self.availableItems = {}
+    self.availableAmmo = {}
 end
 
 function OwnMarine:get_marine()	
@@ -47,13 +47,16 @@ function OwnMarine:provide_steps(prev)
 		print("inserted command move")
 
 	else -- kill someone
-		nearestEnemy = getNearestEnemy(marine)
-		print("enemy: " .. nearestEnemy.Type .. ", (x: " .. nearestEnemy.Bounds.X, " y: " .. nearestEnemy.Bounds.Y .. ")")
-
-		-- if return is not empty, has a {Command = "attack", Aimed="false", Target={ X = 1, Y = 4 }}
-		-- auto equips weapons :)
-		table.insert(Commands, equipWeapon(marine, marine.Bounds.X, marine.Bounds.Y, availableWeapons))
-		table.insert(Commands, shootWeapon(marine, marine.Bounds.X, marine.Bounds.Y))
+	-- if return is not empty, has a {Command = "attack", Aimed="false", Target={ X = 1, Y = 4 }}
+	-- auto equips weapons :)
+	table.insert(Command, equipWeapon(marine, marine.Bounds.X, marine.Bounds.Y, self.availableWeapons, self.availableAmmo))
+	table.insert(Command, shootWeapon(marine, marine.Bounds.X, marine.Bounds.Y))
+	
+	-- so, call this if we only moved once or call 2 times if we can.
+	
+	
+	
+	return Command
 	end
 
 	return Commands
