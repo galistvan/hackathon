@@ -1,8 +1,9 @@
 require 'Shooter.shoot'
 
 OwnMarine = class( "Marine" )
-availableWeapons = {}
+availableWeapons = {"w_hand"}
 availableItems = {}
+availableAmmo = {}
 
 function OwnMarine:initialize(player_index, marine_id, instance_index)
     self.player_index = player_index
@@ -25,13 +26,16 @@ function OwnMarine:select_mode()
 end
 
 function OwnMarine:provide_steps(prev)
+  Command = {}
 	marine = self:get_marine()
-	--local marineX = getMarineCoordX(marine)
-	--local marineY = getMarineCoordY(marine)
-	print("marine x: " .. marine.Bounds.X .. ", y: " .. marine.Bounds.Y)
-	--print (marineX-1)
+	local marineX = getMarineCoordX(marine)
+	local marineY = getMarineCoordY(marine)
 
 	nearestWeapon = getNearestWeapon(marine)
+	nearestEnemy = getNearestEnemy(marine)
+	print("weapon: " .. nearestWeapon.Type .. ", (x: " .. nearestWeapon.Bounds.X, " y: " .. nearestWeapon.Bounds.Y .. ")")
+	print("enemy: " .. nearestEnemy.Type .. ", (x: " .. nearestEnemy.Bounds.X, " y: " .. nearestEnemy.Bounds.Y .. ")")
+
 	weaponPath = Game.Map:get_move_path(marine.Id, nearestWeapon.Bounds.X, nearestWeapon.Bounds.Y)
 	movePath = getFirstNItemsFromList(marine.MovePoints, weaponPath)
 	
@@ -41,6 +45,10 @@ function OwnMarine:provide_steps(prev)
 	end
 	-- if return is not empty, has a {Command = "attack", Aimed="false", Target={ X = 1, Y = 4 }}
 	-- auto equips weapons :)
+	table.insert(Command, equipWeapon(marine, marine.Bounds.X, marine.Bounds.Y, availableWeapons))
+	table.insert(Command, shootWeapon(marine, marine.Bounds.X, marine.Bounds.Y))
+  print(Command[1])
+	return Command
 	-- shoot(marine, x, y, availableWeapons)
 	return { {Command = "move", Path =  movePath  }, {Command = "done"} }
 	-- return {{Command = "done" }}
