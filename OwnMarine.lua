@@ -11,6 +11,7 @@ function OwnMarine:initialize(player_index, marine_id, instance_index)
     self.availableWeapons = {"w_hand"}
     self.availableItems = {}
     self.availableAmmo = {}
+	Game.register_event_handler(self.HandleEvents, self)
 end
 
 function OwnMarine:get_marine()	
@@ -39,11 +40,12 @@ function OwnMarine:provide_steps(prev)
 
 
   if whatTodo == "pickUpWeapon" then
-    table.insert(Commands, doWeaponPickUp(marine))
+    table.insert(Commands, doWeaponPickUp(self, marine, nearestWeapon))
   elseif whatTodo == "attack" then
     table.insert(Commands, equipWeapon(marine, marine.Bounds.X, marine.Bounds.Y, self.availableWeapons, self.availableAmmo))
     table.insert(Commands, shootWeapon(marine, marine.Bounds.X, marine.Bounds.Y))
   end
+      table.insert(Commands, { Command = "done" })
 	return Commands
 end
 
@@ -52,7 +54,8 @@ function OwnMarine:on_dodging(attack) end
 function OwnMarine:on_knockback(attack, entity) end
 
 function OwnMarine:isIHaveThatWeapon(nearestWeapon) 
-	print("do have i that weapon?")
+	print("available weapons: " )
+	printTable(self.availableWeapons)
 	for _,v in pairs(self.availableWeapons) do
 	  if v == nearestWeapon then
 		return true
@@ -68,19 +71,24 @@ function getMarineCoordY(marine)
 	return marine.Bounds.Y
 end
 
-function OwnMarine:when_other_marine_pickingupitem(other, event, prev) 
-	print("picking up item")
-	print(tostring(other))
-	print(tostring(event))
-	print(tostring(prev))
-
-	table.insert(availableWeapons, other)
+function OwnMarine:HandleEvents(name, event) 
+	if name == "EntityPickingUpItem" then
+		print("received item" .. event.Item)
+		print(tostring(name))
+		print(tostring(event))
+		table.insert(self.availableWeapons, event.Item)
+	else 
+		if name == "EntityLostItem" then
+			print("lost item" .. event.Item)
+			print(tostring(name))
+			print(tostring(event))
+			table.remove(self.availableWeapons, event.Item)
+		end
+	end
 end
 
-function OwnMarine:when_other_marine_pickedupitem(other, event, prev) 
-	print("picked up item")
-	print(tostring(other))
-	print(tostring(event))
-	print(tostring(prev))
-
+function printTable(table) 
+	for k, v in pairs( table ) do
+		print(k, v)
+	end
 end

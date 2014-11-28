@@ -1,12 +1,11 @@
 
-function doWeaponPickUp(marine)
+function doWeaponPickUp(marine, marineEntity, nearestWeapon)
     print("weapon: " .. nearestWeapon.Type .. ", (x: " .. nearestWeapon.Bounds.X, " y: " .. nearestWeapon.Bounds.Y .. ")")
-    if (isStandAboveAWeapon(marine) and self:isIHaveThatWeapon(nearestWeapon))then
-      print("picking up")
+    if (isStandAboveAWeapon(marineEntity) and not marine:isIHaveThatWeapon(nearestWeapon))then
       return { Command = "pickup" }
     end
-    weaponPath = Game.Map:get_move_path(marine.Id, nearestWeapon.Bounds.X, nearestWeapon.Bounds.Y)
-    movePath = getFirstNItemsFromList(marine.MovePoints, weaponPath)
+    weaponPath = Game.Map:get_move_path(marineEntity.Id, nearestWeapon.Bounds.X, nearestWeapon.Bounds.Y)
+    movePath = getFirstNItemsFromList(marineEntity.MovePoints, weaponPath)
     print(lengthOfArray(movePath))
     print("insert command move")
     return { Command = "move", Path = movePath  }
