@@ -1,4 +1,18 @@
 
+function doWeaponPickUp(marine)
+    print("weapon: " .. nearestWeapon.Type .. ", (x: " .. nearestWeapon.Bounds.X, " y: " .. nearestWeapon.Bounds.Y .. ")")
+    if (isStandAboveAWeapon(marine) and self:isIHaveThatWeapon(nearestWeapon))then
+      print("picking up")
+      return { Command = "pickup" }
+    end
+    weaponPath = Game.Map:get_move_path(marine.Id, nearestWeapon.Bounds.X, nearestWeapon.Bounds.Y)
+    movePath = getFirstNItemsFromList(marine.MovePoints, weaponPath)
+    print(lengthOfArray(movePath))
+    print("insert command move")
+    return { Command = "move", Path = movePath  }
+
+end
+
 function printAllEntities()
 	local entities = Game.Map:entities_in(0, 0, Game.Map.width, Game.Map.height)
 	for k, v in pairs(entities) do
@@ -64,3 +78,23 @@ function isWeapon(entity)
 	end
 end
 
+function getFirstNItemsFromList(n, list)
+  resultList = {}
+  for i=1,n do 
+    table.insert(resultList,list[i])
+  end
+  return resultList
+end
+
+function isStandAboveAWeapon(marine) 
+  entities = Game.Map:entities_in(marine.Bounds.X, marine.Bounds.Y, 1, 1)
+  print("weapon check")
+  for _, v in pairs(entities) do
+    if isWeapon(v) then
+      print("weapon check end true")
+      return true
+    end
+  end
+  print("weapon check end")
+  return false
+end

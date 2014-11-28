@@ -1,4 +1,6 @@
 require 'Shooter.shoot'
+require 'AI.makeDecision'
+require 'Mappers.weaponsearch'
 
 OwnMarine = class( "Marine" )
 
@@ -9,7 +11,6 @@ function OwnMarine:initialize(player_index, marine_id, instance_index)
     self.availableWeapons = {"w_hand"}
     self.availableItems = {}
     self.availableAmmo = {}
-	Game.register_event_handler(self.HandleEvents, self)
 end
 
 function OwnMarine:get_marine()	
@@ -19,8 +20,8 @@ function OwnMarine:get_marine()
 end
 
 function OwnMarine:select_mode()
--- return "advance"
- return "sprint"
+ return "advance"
+-- return "sprint"
 -- return "guard"
 -- return "ready"
 
@@ -31,34 +32,18 @@ function OwnMarine:provide_steps(prev)
 	marine = self:get_marine()
 	local marineX = getMarineCoordX(marine)
 	local marineY = getMarineCoordY(marine)
+  nearestEnemy = getNearestEnemy(marine)
+  nearestWeapon = getNearestWeapon(marine)
 
-	if (lengthOfArray(self.availableWeapons) <= 1) then -- find a weapon
-		nearestWeapon = getNearestWeapon(marine)
-		print("weapon: " .. nearestWeapon.Type .. ", (x: " .. nearestWeapon.Bounds.X, " y: " .. nearestWeapon.Bounds.Y .. ")")
+  whatTodo = makeDecision(marine, self.availableWeapons, self.availabeItems, self.availableAmmo, nearestEnemy, nearestWeapon)
 
-		if (isStandAboveAWeapon(marine) and not self:isIHaveThatWeapon(nearestWeapon))then
-			print("picking up")
-			table.insert(Commands, { Command = "pickup" } )
-		end
-		weaponPath = Game.Map:get_move_path(marine.Id, nearestWeapon.Bounds.X, nearestWeapon.Bounds.Y)
-		movePath = getFirstNItemsFromList(marine.MovePoints, weaponPath)
-		print(lengthOfArray(movePath))
-		print("insert command move")
-		table.insert(Commands, { Command = "move", Path = movePath  } )
-		print("inserted command move")
 
-	else -- kill someone
-		nearestEnemy = getNearestEnemy(marine)
-		print("enemy: " .. nearestEnemy.Type .. ", (x: " .. nearestEnemy.Bounds.X, " y: " .. nearestEnemy.Bounds.Y .. ")")
-		-- if return is not empty, has a {Command = "attack", Aimed="false", Target={ X = 1, Y = 4 }}
-		-- auto equips weapons :)
-		table.insert(Commands, equipWeapon(marine, marine.Bounds.X, marine.Bounds.Y, self.availableWeapons, self.availableAmmo))
-		table.insert(Commands, shootWeapon(marine, marine.Bounds.X, marine.Bounds.Y))
-	
-		-- so, call this if we only moved once or call 2 times if we can.
-	end
-	table.insert(Commands, { Command = "done" } )
-	printCommands(Commands)
+  if whatTodo == "pickUpWeapon" then
+    table.insert(Commands, doWeaponPickUp(marine))
+  elseif whatTodo == "attack" then
+    table.insert(Commands, equipWeapon(marine, marine.Bounds.X, marine.Bounds.Y, self.availableWeapons, self.availableAmmo))
+    table.insert(Commands, shootWeapon(marine, marine.Bounds.X, marine.Bounds.Y))
+  end
 	return Commands
 end
 
@@ -83,48 +68,19 @@ function getMarineCoordY(marine)
 	return marine.Bounds.Y
 end
 
-function getFirstNItemsFromList(n, list)
-	resultList = {}
-	for i=1,n do 
-		table.insert(resultList,list[i])
-	end
-	return resultList
+function OwnMarine:when_other_marine_pickingupitem(other, event, prev) 
+	print("picking up item")
+	print(tostring(other))
+	print(tostring(event))
+	print(tostring(prev))
+
+	table.insert(availableWeapons, other)
 end
 
-function isStandAboveAWeapon(marine) 
-	entities = Game.Map:entities_in(marine.Bounds.X, marine.Bounds.Y, 1, 1)
-	print("weapon check")
-	for _, v in pairs(entities) do
-		if isWeapon(v) then
-			print("weapon check end true")
-			return true
-		end
-	end
-	print("weapon check end")
-	return false
+function OwnMarine:when_other_marine_pickedupitem(other, event, prev) 
+	print("picked up item")
+	print(tostring(other))
+	print(tostring(event))
+	print(tostring(prev))
+
 end
-
-function OwnMarine:HandleEvents(name, event) 
-	if name == "EntityPickingUpItem" then
-		print("received item" .. event.Item)
-		print(tostring(name))
-		print(tostring(event))
-		table.insert(self.availableWeapons, event.Item)
-	else 
-		if name == "EntityLostItem" then
-			print("lost item")
-			print(tostring(name))
-			print(tostring(event))
-			table.remove(self.availableWeapons, event.Item)
-		end
-	end
-end
-
-
-
-function printCommands(commands) 
-	for k, v in pairs( commands ) do
-		print(k, v)
-	end
-end
-
