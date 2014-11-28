@@ -22,12 +22,12 @@ function OwnMarine:get_marine()
     return marine
 end
 
-function OwnMarine:select_mode()
- return "advance"
+function OwnMarine:select_mode(mode)
 -- return "sprint"
 -- return "guard"
 -- return "ready"
-
+-- return "advance"
+ return mode
 end
 
 function OwnMarine:provide_steps(prev)
@@ -40,7 +40,7 @@ function OwnMarine:provide_steps(prev)
 
   whatTodo = makeDecision(marine, self.availableWeapons, self.availabeItems, self.availableAmmo, nearestEnemy, nearestWeapon)
 
-
+  OwnMarine.select_mode(whatTodo[3])
   if whatTodo[1] == "pickUpWeapon" then
     table.insert(Commands, doWeaponPickUp(self, marine, nearestWeapon))
   elseif whatTodo[1] == "attack" then

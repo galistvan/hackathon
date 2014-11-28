@@ -1,6 +1,6 @@
 function equipWeapon(marine, x, y, availableWeapons)
   Command = {}
-  equipWeaponsCommand = equipWeapons(availableWeapons)
+  equipWeaponsCommand = equipWeapons(marine, x, y, availableWeapons)
 	table.insert(Command, equipWeaponsCommand)
 	return Command
 	
@@ -12,7 +12,7 @@ function shootWeapon(marine, x, y)
   return attackCommand
 end
 
-function equipWeapons(availableWeapons)	
+function equipWeapons(marine, x, y, availableWeapons)	
   local Command = {}
 	listofWeapons = {"w_bfg", "w_plasma", "w_chaingun", "w_shotgun", "w_machinegun", "w_pistol", "w_chainsaw", "w_hand"}
 	for k, v in ipairs(listofWeapons) do
@@ -29,4 +29,37 @@ function inTable(tbl, item)
         if value == item then return value end
     end
     return false
+end
+
+function getMaximumRange(marine, availableWeapons)
+  maxRange = 1
+  for k,v in ipairs(availableWeapons) do
+    currentRange = returnWeaponRange(v, marine)
+    if currentRange > maxRange then
+      maxRange = currentRange
+    end
+  end
+  return maxRange
+end
+
+-- fix for csapattiszt
+function returnWeaponRange(weapon, marine)
+  if(weapon == "grenade") then
+    return 6+marine.Accuracy
+  elseif(weapon == "w_bfg") then
+    return 15+marine.Accuracy
+  elseif(weapon == "w_plasma") then
+    return 10+marine.Accuracy
+  elseif(weapon == "w_chaingun") then
+    return 9
+  elseif(weapon == "w_shotgun") then
+    return 4
+  elseif(weapon == "w_machinegun") then
+    return 8+marine.Accuracy
+  elseif(weapon == "w_pistol") then
+    return 7+marine.Accuracy
+  else
+    return 1
+  end
+
 end
