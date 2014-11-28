@@ -1,22 +1,28 @@
 function shoot(marine, x, y, availableWeapons)
-	return {equipWeapons(availableWeapons), {Command = "attack", Aimed = false, Traget =  {X = x, Y = y}}}
+  command = {}
+	valami = {}
+	attackCommand = {Command = "attack", Aimed = false, Target =  {X = x, Y = y}}
+	valami = equipWeapons(availableWeapons)
+	command[1] = valami
+	command[2] = attackCommand
+	return command
 	
 
 end
 
 function equipWeapons(availableWeapons)	
 	listofWeapons = {"w_bfg", "w_plasma", "w_chaingun", "w_shotgun", "w_machinegun", "w_pistol", "w_chainsaw", "w_hand"}
-	for i = 8, 1 do
-		if inTable(availableWeapons, listofWeapons[i])	then
-			print ("Equipped weapon" .. listofWeapons[i])
-			return {Command = "select_weapon", Weapon = listofWeapons[i]}
+	for k, v in ipairs(listofWeapons) do
+		if inTable(availableWeapons, v)	then
+			print ("Equipped weapon " .. v)
+			return {Command = "select_weapon", Weapon = v}
 		end
 	end
 end
 
 function inTable(tbl, item)
-    for value in tbl do
-        if value == item then return key end
+    for k, value in ipairs(tbl) do
+        if value == item then return value end
     end
     return false
 end

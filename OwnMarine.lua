@@ -1,6 +1,6 @@
 require 'Shooter.shoot'
 OwnMarine = class( "Marine" )
-availableWeapons = {"w_fist"}
+availableWeapons = {"w_hand"}
 availableItems = {}
 availableAmmo = {}
 
@@ -36,8 +36,9 @@ function OwnMarine:provide_steps(prev)
 
 	-- if return is not empty, has a {Command = "attack", Aimed="false", Target={ X = 1, Y = 4 }}
 	-- auto equips weapons :)
-	-- shoot(marine, x, y, availableWeapons)
-	return { {Command = "move", Path = { { X = marineX-1, Y = marineY } } }, Command = "done" }
+	attackcommand = shoot(marine, marine.Bounds.X, marine.Bounds.Y, availableWeapons)
+	print (attackcommand)
+	return { attackcommand, {Command = "move", Path = { { X = marineX-1, Y = marineY } } }, Command = "done" }
 end
 
 function OwnMarine:on_aiming(attack) end
