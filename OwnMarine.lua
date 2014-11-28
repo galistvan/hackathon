@@ -3,6 +3,7 @@ require 'AI.makeDecision'
 require 'Mappers.weaponsearch'
 
 OwnMarine = class( "Marine" )
+ownMarines= {}
 
 function OwnMarine:initialize(player_index, marine_id, instance_index)
     self.player_index = player_index
@@ -12,6 +13,7 @@ function OwnMarine:initialize(player_index, marine_id, instance_index)
     self.availableItems = {}
     self.availableAmmo = {}
 	Game.register_event_handler(self.HandleEvents, self)
+	table.insert(ownMarines,marine_id)
 end
 
 function OwnMarine:get_marine()	
@@ -33,8 +35,8 @@ function OwnMarine:provide_steps(prev)
 	marine = self:get_marine()
 	local marineX = getMarineCoordX(marine)
 	local marineY = getMarineCoordY(marine)
-  nearestEnemy = getNearestEnemy(marine)
-  nearestWeapon = getNearestWeapon(marine)
+	nearestEnemy = getNearestEnemy(marine,ownMarines)
+	nearestWeapon = getNearestWeapon(marine)
 
   whatTodo = makeDecision(marine, self.availableWeapons, self.availabeItems, self.availableAmmo, nearestEnemy, nearestWeapon)
 
