@@ -21,29 +21,32 @@ function getNearestWeapon(marineEntity)
 	gameEntities = Game.Map:entities_in(0, 0, Game.Map.width, Game.Map.height)
 	nearestWeapon = nil
 	shortestPath = -1
-	weapons = {}
+	print("searching weapons...")
 	for _, v in pairs(gameEntities) do
 		if isWeapon(v) then
-			--print("weapon found " .. tostring(v.Type))
+			print("weapon found " .. tostring(v.Type))
 			if nearestWeapon == nil then
-				nearestWeapon = v
-				print(tostring(marineEntity))
-				print(tostring(v.Bounds.X))
-				print(tostring(v.Bounds.Y))
-				shortestPath = Game.Map:get_move_path(marineEntity.Id, v.Bounds.X, v.Bounds.Y)
+				currentPath = Game.Map:get_move_path(marineEntity.Id, v.Bounds.X, v.Bounds.Y)
+				if lengthOfArray(currentPath) > 0 then
+					nearestWeapon = v
+					print(tostring(marineEntity))
+					print(tostring(v.Bounds.X))
+					print(tostring(v.Bounds.Y))
+					shortestPath = currentPath
+				end 
 			else
 		 		local currentPath = Game.Map:get_move_path(marineEntity.Id, v.Bounds.X, v.Bounds.Y)
-				--print (lengthOfArray(currentPath))
-				if lengthOfArray(currentPath) < lengthOfArray(shortestPath) then
+				print (lengthOfArray(currentPath))
+				if lengthOfArray(currentPath) < lengthOfArray(shortestPath) and lengthOfArray(currentPath) > 0 then
 					nearestWeapon = v
 					shortestPath = currentPath
 				end
 			end
 		end
 	end
-	--print("marine: " .. marineEntity.Bounds.X, marineEntity.Bounds.Y)
-	--print("weapon: " .. nearestWeapon.Bounds.X, nearestWeapon.Bounds.Y)
-	--print("path = " .. lengthOfArray(shortestPath))
+	print("marine: " .. marineEntity.Bounds.X, marineEntity.Bounds.Y)
+	print("weapon: " .. nearestWeapon.Bounds.X, nearestWeapon.Bounds.Y)
+	print("path = " .. lengthOfArray(shortestPath))
 	return nearestWeapon
 end
 

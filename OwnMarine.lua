@@ -1,4 +1,5 @@
 require 'Shooter.shoot'
+
 OwnMarine = class( "Marine" )
 availableWeapons = {}
 availableItems = {}
@@ -25,18 +26,24 @@ end
 
 function OwnMarine:provide_steps(prev)
 	marine = self:get_marine()
-	local marineX = getMarineCoordX(marine)
-	local marineY = getMarineCoordY(marine)
-	print("x: " .. marine.Bounds.X .. ", y: " .. marine.Bounds.Y)
-	print (marineX-1)
+	--local marineX = getMarineCoordX(marine)
+	--local marineY = getMarineCoordY(marine)
+	print("marine x: " .. marine.Bounds.X .. ", y: " .. marine.Bounds.Y)
+	--print (marineX-1)
 
 	nearestWeapon = getNearestWeapon(marine)
-	print("weapon: " .. nearestWeapon.Type .. ", (x: " .. nearestWeapon.Bounds.X, " y: " .. nearestWeapon.Bounds.Y .. ")")
-
+	weaponPath = Game.Map:get_move_path(marine.Id, nearestWeapon.Bounds.X, nearestWeapon.Bounds.Y)
+	movePath = getFirstNItemsFromList(marine.MovePoints, weaponPath)
+	
+	if isStandAboveAWeapon(marine) then
+		print("standaboveWeapon")
+		return {  Command = "pickup" } 
+	end
 	-- if return is not empty, has a {Command = "attack", Aimed="false", Target={ X = 1, Y = 4 }}
 	-- auto equips weapons :)
 	-- shoot(marine, x, y, availableWeapons)
-	return { {Command = "move", Path = { { X = marineX-1, Y = marineY } } }, Command = "done" }
+	return { {Command = "move", Path =  movePath  }, {Command = "done"} }
+	-- return {{Command = "done" }}
 end
 
 function OwnMarine:on_aiming(attack) end
@@ -48,4 +55,22 @@ function getMarineCoordX(marine)
 end
 function getMarineCoordY(marine)
 	return marine.Bounds.Y
+end
+
+function getFirstNItemsFromList(n, list)
+	resultList = {}
+	for i=1,n do 
+		table.insert(resultList,list[i])
+	end
+	return resultList
+end
+
+function isStandAboveAWeapon(marine) 
+	entities = Game.Map:entities_in(marine.Bounds.X, marine.Bounds.Y, 1, 1)
+	for _, v in pairs(entities) do
+		if isWeapon(v) then
+			return true
+		end
+	end
+	return false
 end
