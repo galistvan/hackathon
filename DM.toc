@@ -1,5 +1,6 @@
-weaponsearch.lua
 OwnMarine.lua
 Entry.lua
 enemysearch.lua
 Shooter\shoot.lua
+AI\makeDecision.lua
+Mappers\weaponsearch.lua
