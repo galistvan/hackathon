@@ -31,7 +31,7 @@ function OwnMarine:provide_steps(prev)
 	local marineX = getMarineCoordX(marine)
 	local marineY = getMarineCoordY(marine)
 
-	if (lengthOfArray(availableWeapons) <= 1) then -- find a weapon
+	if (lengthOfArray(self.availableWeapons) <= 1) then -- find a weapon
 		nearestWeapon = getNearestWeapon(marine)
 		print("weapon: " .. nearestWeapon.Type .. ", (x: " .. nearestWeapon.Bounds.X, " y: " .. nearestWeapon.Bounds.Y .. ")")
 
@@ -47,16 +47,14 @@ function OwnMarine:provide_steps(prev)
 		print("inserted command move")
 
 	else -- kill someone
-	-- if return is not empty, has a {Command = "attack", Aimed="false", Target={ X = 1, Y = 4 }}
-	-- auto equips weapons :)
-	table.insert(Command, equipWeapon(marine, marine.Bounds.X, marine.Bounds.Y, self.availableWeapons, self.availableAmmo))
-	table.insert(Command, shootWeapon(marine, marine.Bounds.X, marine.Bounds.Y))
+		nearestEnemy = getNearestEnemy(marine)
+		print("enemy: " .. nearestEnemy.Type .. ", (x: " .. nearestEnemy.Bounds.X, " y: " .. nearestEnemy.Bounds.Y .. ")")
+		-- if return is not empty, has a {Command = "attack", Aimed="false", Target={ X = 1, Y = 4 }}
+		-- auto equips weapons :)
+		table.insert(Commands, equipWeapon(marine, marine.Bounds.X, marine.Bounds.Y, self.availableWeapons, self.availableAmmo))
+		table.insert(Commands, shootWeapon(marine, marine.Bounds.X, marine.Bounds.Y))
 	
-	-- so, call this if we only moved once or call 2 times if we can.
-	
-	
-	
-	return Command
+		-- so, call this if we only moved once or call 2 times if we can.
 	end
 
 	return Commands
@@ -68,7 +66,7 @@ function OwnMarine:on_knockback(attack, entity) end
 
 function OwnMarine:isIHaveThatWeapon(nearestWeapon) 
 	print("do have i that weapon?")
-	for _,v in pairs(availableWeapons) do
+	for _,v in pairs(self.availableWeapons) do
 	  if v == nearestWeapon then
 		return true
 	  end

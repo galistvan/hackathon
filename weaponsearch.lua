@@ -64,10 +64,3 @@ function isWeapon(entity)
 	end
 end
 
-function lengthOfArray(t)
-	count = 0
-	for k,v in pairs(t) do
-			count = count + 1
-	end
-	return count 
-end
