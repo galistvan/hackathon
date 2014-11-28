@@ -9,6 +9,7 @@ function OwnMarine:initialize(player_index, marine_id, instance_index)
     self.availableWeapons = {"w_hand"}
     self.availableItems = {}
     self.availableAmmo = {}
+	Game.register_event_handler(self.HandleEvents, self)
 end
 
 function OwnMarine:get_marine()	
@@ -18,8 +19,8 @@ function OwnMarine:get_marine()
 end
 
 function OwnMarine:select_mode()
- return "advance"
--- return "sprint"
+-- return "advance"
+ return "sprint"
 -- return "guard"
 -- return "ready"
 
@@ -35,7 +36,7 @@ function OwnMarine:provide_steps(prev)
 		nearestWeapon = getNearestWeapon(marine)
 		print("weapon: " .. nearestWeapon.Type .. ", (x: " .. nearestWeapon.Bounds.X, " y: " .. nearestWeapon.Bounds.Y .. ")")
 
-		if (isStandAboveAWeapon(marine) and self:isIHaveThatWeapon(nearestWeapon))then
+		if (isStandAboveAWeapon(marine) and not self:isIHaveThatWeapon(nearestWeapon))then
 			print("picking up")
 			table.insert(Commands, { Command = "pickup" } )
 		end
@@ -56,7 +57,8 @@ function OwnMarine:provide_steps(prev)
 	
 		-- so, call this if we only moved once or call 2 times if we can.
 	end
-
+	table.insert(Commands, { Command = "done" } )
+	printCommands(Commands)
 	return Commands
 end
 
@@ -102,19 +104,27 @@ function isStandAboveAWeapon(marine)
 	return false
 end
 
-function OwnMarine:when_other_marine_pickingupitem(other, event, prev) 
-	print("picking up item")
-	print(tostring(other))
-	print(tostring(event))
-	print(tostring(prev))
-
-	table.insert(availableWeapons, other)
+function OwnMarine:HandleEvents(name, event) 
+	if name == "EntityPickingUpItem" then
+		print("received item" .. event.Item)
+		print(tostring(name))
+		print(tostring(event))
+		table.insert(self.availableWeapons, event.Item)
+	else 
+		if name == "EntityLostItem" then
+			print("lost item")
+			print(tostring(name))
+			print(tostring(event))
+			table.remove(self.availableWeapons, event.Item)
+		end
+	end
 end
 
-function OwnMarine:when_other_marine_pickedupitem(other, event, prev) 
-	print("picked up item")
-	print(tostring(other))
-	print(tostring(event))
-	print(tostring(prev))
 
+
+function printCommands(commands) 
+	for k, v in pairs( commands ) do
+		print(k, v)
+	end
 end
+
