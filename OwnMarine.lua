@@ -22,11 +22,20 @@ end
 
 function OwnMarine:provide_steps(prev)
 	marine = self:get_marine()
+	local marineX = getMarineCoordX(marine)
+	local marineY = getMarineCoordY(marine)
 	print("x: " .. marine.Bounds.X .. ", y: " .. marine.Bounds.Y)
-	
-	return {  Command = "move", Path = { { X = 1, Y = 1 }, { X = 2, Y = 2}, { X = 3, Y = 2} } } 
+	print (marineX-1)
+	return { {Command = "move", Path = { { X = marineX-1, Y = marineY } } }, Command = "done" }
 end
 
 function OwnMarine:on_aiming(attack) end
 function OwnMarine:on_dodging(attack) end
 function OwnMarine:on_knockback(attack, entity) end
+
+function getMarineCoordX(marine)
+	return marine.Bounds.X
+end
+function getMarineCoordY(marine)
+	return marine.Bounds.Y
+end
