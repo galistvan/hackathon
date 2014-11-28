@@ -39,11 +39,14 @@ function OwnMarine:provide_steps(prev)
   whatTodo = makeDecision(marine, self.availableWeapons, self.availabeItems, self.availableAmmo, nearestEnemy, nearestWeapon)
 
 
-  if whatTodo == "pickUpWeapon" then
+  if whatTodo[1] == "pickUpWeapon" then
     table.insert(Commands, doWeaponPickUp(self, marine, nearestWeapon))
-  elseif whatTodo == "attack" then
+  elseif whatTodo[1] == "attack" then
     table.insert(Commands, equipWeapon(marine, marine.Bounds.X, marine.Bounds.Y, self.availableWeapons, self.availableAmmo))
     table.insert(Commands, shootWeapon(marine, marine.Bounds.X, marine.Bounds.Y))
+  elseif whatTodo[1] == "move" then
+  
+  
   end
       table.insert(Commands, { Command = "done" })
 	return Commands
