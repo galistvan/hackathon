@@ -22,12 +22,12 @@ function OwnMarine:get_marine()
     return marine
 end
 
-function OwnMarine:select_mode()
- return "advance"
+function OwnMarine:select_mode(mode)
 -- return "sprint"
 -- return "guard"
 -- return "ready"
-
+-- return "advance"
+ return mode
 end
 
 function OwnMarine:provide_steps(prev)
@@ -40,14 +40,14 @@ function OwnMarine:provide_steps(prev)
 
   whatTodo = makeDecision(marine, self.availableWeapons, self.availabeItems, self.availableAmmo, nearestEnemy, nearestWeapon)
 
-
+  OwnMarine.select_mode(whatTodo[3])
   if whatTodo[1] == "pickUpWeapon" then
     table.insert(Commands, doWeaponPickUp(self, marine, nearestWeapon))
   elseif whatTodo[1] == "attack" then
-    table.insert(Commands, equipWeapon(marine, marine.Bounds.X, marine.Bounds.Y, self.availableWeapons, self.availableAmmo))
-    table.insert(Commands, shootWeapon(marine, marine.Bounds.X, marine.Bounds.Y))
+    table.insert(Commands, equipWeapon(marine, whatTodo[2][1], whatTodo[2][2], self.availableWeapons, self.availableAmmo))
+    table.insert(Commands, shootWeapon(marine, whatTodo[2][1], whatTodo[2][2]))
   elseif whatTodo[1] == "move" then
-  
+    -- need to move towards enemy?
   
   end
       table.insert(Commands, { Command = "done" })
@@ -59,8 +59,6 @@ function OwnMarine:on_dodging(attack) end
 function OwnMarine:on_knockback(attack, entity) end
 
 function OwnMarine:isIHaveThatWeapon(nearestWeapon) 
-	print("available weapons: " )
-	printTable(self.availableWeapons)
 	for _,v in pairs(self.availableWeapons) do
 	  if v == nearestWeapon then
 		return true
@@ -78,18 +76,19 @@ end
 
 function OwnMarine:HandleEvents(name, event) 
 	if name == "EntityPickingUpItem" then
-		print("received item" .. event.Item)
-		print(tostring(name))
-		print(tostring(event))
+		print("picking up item: " .. event.Item)
 		table.insert(self.availableWeapons, event.Item)
+		print("currently available weapons: " )
+		printTable(self.availableWeapons)
 	else 
 		if name == "EntityLostItem" then
-			print("lost item" .. event.Item)
-			print(tostring(name))
-			print(tostring(event))
+			print("lost item: " .. event.Item)
 			table.remove(self.availableWeapons, event.Item)
+			print("currently available weapons: " )
+			printTable(self.availableWeapons)
 		end
 	end
+
 end
 
 function printTable(table) 
