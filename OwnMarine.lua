@@ -1,5 +1,7 @@
 require 'Shooter.shoot'
 OwnMarine = class( "Marine" )
+availableWeapons = {}
+availableItems = {}
 
 function OwnMarine:initialize(player_index, marine_id, instance_index)
     self.player_index = player_index
@@ -29,7 +31,7 @@ function OwnMarine:provide_steps(prev)
 	print (marineX-1)
 	-- if return is not empty, has a {Command = "attack", Aimed="false", Target={ X = 1, Y = 4 }}
 	-- auto equips weapons :)
-	-- shoot(marine, x, y)
+	-- shoot(marine, x, y, availableWeapons)
 	return { {Command = "move", Path = { { X = marineX-1, Y = marineY } } }, Command = "done" }
 end
 
