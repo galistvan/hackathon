@@ -11,6 +11,8 @@ function OwnMarine:initialize(player_index, marine_id, instance_index)
   self.instance_index = instance_index
   self.actionMode = "advance"
   self.ownMarines= {}
+  self.nearestEnemy = ""
+  self.nearestWeapon = ""
   table.insert(self.ownMarines,marine_id)
 end
 
@@ -23,10 +25,10 @@ end
 function OwnMarine:select_mode()
 
   local marine = self:get_marine()
-  local nearestEnemy = getNearestEnemy(marine,self.ownMarines)
-  local nearestWeapon = getNearestWeapon(marine)
+  self.nearestEnemy = getNearestEnemy(marine,self.ownMarines)
+  self.nearestWeapon = getNearestWeapon(marine)
 
-  local whatTodo = makeDecision(marine, nearestEnemy, nearestWeapon)
+  local whatTodo = makeDecision(marine, self.nearestEnemy, self.nearestWeapon)
   -- return "sprint"
   -- return "guard"
   -- return "ready"
@@ -38,49 +40,49 @@ end
 function OwnMarine:provide_steps(prev)
   local Commands = {}
   local marine = self:get_marine()
-  local nearestEnemy = getNearestEnemy(marine,self.ownMarines)
-  local nearestWeapon = getNearestWeapon(marine)
+  self.nearestEnemy = getNearestEnemy(marine,self.ownMarines)
+  self.nearestWeapon = getNearestWeapon(marine)
 
-  local whatTodo = makeDecision(marine, nearestEnemy, nearestWeapon)
+  local whatTodo = makeDecision(marine, self.nearestEnemy, self.nearestWeapon)
 
   if whatTodo[1] == "pickUpWeapon" then
     print("Going for weapon!")
-    table.insert(Commands, doWeaponPickUp(self, marine, nearestWeapon))
+    table.insert(Commands, doWeaponPickUp(self, marine, self.nearestWeapon))
     table.insert(Commands, {Command = "pickup"})
   elseif whatTodo[1] == "heal" then
     print("Going for medkit!")
     table.insert(Commands, getHealth(marine))
   elseif whatTodo[1] == "attack" then
-    print("Attacking!!", "marine", marine.Id, "target", nearestEnemy.Id)
+    print("Attacking!!", "marine", marine.Id, "target", self.nearestEnemy.Id)
     table.insert(Commands, equipWeapons(marine, whatTodo[2][1], whatTodo[2][2]))
     table.insert(Commands, shootWeapon(marine, whatTodo[2][1], whatTodo[2][2]))
   elseif whatTodo[1] == "move" then
-    print("moving towards enemy!", "marine", marine.Id, "target", nearestEnemy.Id)
+    print("moving towards enemy!", "marine", marine.Id, "target", self.nearestEnemy.Id)
 
-    movePath = determineAttackPath(marine, whatTodo[2][1], whatTodo[2][2])
+    local movePath = determineAttackPath(marine, whatTodo[2][1], whatTodo[2][2])
     if(movePath == -1) then
-      print("No route to enemy, Going for weapon!", "marine", marine.Id, "target", nearestEnemy.Id)
-      table.insert(Commands, doWeaponPickUp(self, marine, nearestWeapon))
+      print("No route to enemy, Going for weapon!", "marine", marine.Id, "target", self.nearestEnemy.Id)
+      table.insert(Commands, doWeaponPickUp(self, marine, self.nearestWeapon))
     else
       table.insert(Commands, {Command = "move", Path = movePath })
     end
   elseif whatTodo[1] == "backandkill" then
-    movePath = determineRetreatPath(marine, whatTodo[2][1], whatTodo[2][2])
-    if(#movePath == 0 and enemyInSight(marine, nearestEnemy) == -1) then
-      print("No route to enemy, Going for weapon!", "marine", marine.Id, "target", nearestEnemy.Id)
-      table.insert(Commands, doWeaponPickUp(self, marine, nearestWeapon))
+    local movePath = determineRetreatPath(marine, whatTodo[2][1], whatTodo[2][2])
+    if(#movePath == 0 and enemyInSight(marine, self.nearestEnemy) == -1) then
+      print("No route to enemy, Going for weapon!", "marine", marine.Id, "target", self.nearestEnemy.Id)
+      table.insert(Commands, doWeaponPickUp(self, marine, self.nearestWeapon))
     else
       table.insert(Commands, {Command = "move", Path = movePath })
       table.insert(Commands, equipWeapons(marine, whatTodo[2][1], whatTodo[2][2]))
       table.insert(Commands, shootWeapon(marine, whatTodo[2][1], whatTodo[2][2]))
     end
   elseif whatTodo[1] == "movetokill" then
-    movePath = determineAttackPath(marine, whatTodo[2][1], whatTodo[2][2])
-    if(#movePath == 0 and enemyInSight(marine, nearestEnemy) == -1) then
-      print("No route to enemy, Going for weapon!", "marine", marine.Id, "target", nearestEnemy.Id)
-      table.insert(Commands, doWeaponPickUp(self, marine, nearestWeapon))
-    elseif(enemyInSight(marine, nearestEnemy) > 0) then
-      print("moving and shooting", "marine", marine.Id, "target", nearestEnemy.Id)
+    local movePath = determineAttackPath(marine, whatTodo[2][1], whatTodo[2][2])
+    if(#movePath == 0 and enemyInSight(marine, self.nearestEnemy) == -1) then
+      print("No route to enemy, Going for weapon!", "marine", marine.Id, "target", self.nearestEnemy.Id)
+      table.insert(Commands, doWeaponPickUp(self, marine, self.nearestWeapon))
+    elseif(enemyInSight(marine, self.nearestEnemy) > 0) then
+      print("moving and shooting", "marine", marine.Id, "target", self.nearestEnemy.Id)
       table.insert(Commands, equipWeapons(marine, whatTodo[2][1], whatTodo[2][2]))
       table.insert(Commands, shootWeapon(marine, whatTodo[2][1], whatTodo[2][2]))
     else

@@ -7,6 +7,8 @@ function getHealth(marine)
 	local minLength = 100
 	local minPath = nil
 	
+	-- Dani:: only go for heal if you have movePath
+	
 	if #medkit > 0 then
 		for k,v in ipairs(medkit) do
 			pathToMedkit =  Game.Map:get_move_path(marine.Id, v.Bounds.X, v.Bounds.Y)
