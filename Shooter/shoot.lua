@@ -8,7 +8,9 @@ function equipWeapon(marine, x, y)
 end
 
 function shootWeapon(marine, x, y)
-  attackCommand = {Command = "attack", Target = { X = x, Y = y } }
+  local canDoAimed = marine.CanDoAimed;
+  print(marine.Id .. " Is going for an aimed shot!!!")
+  attackCommand = {Command = "attack", Aimed= canDoAimed, Target = { X = x, Y = y } }
   return attackCommand
 end
 
