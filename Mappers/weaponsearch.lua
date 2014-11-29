@@ -5,7 +5,6 @@ function doWeaponPickUp(marine, marineEntity, nearestWeapon)
     end
     weaponPath = Game.Map:get_move_path(marineEntity.Id, nearestWeapon.Bounds.X, nearestWeapon.Bounds.Y)
     movePath = getFirstNItemsFromList(marineEntity.MovePoints, weaponPath)
-    print(lengthOfArray(movePath))
     return { Command = "move", Path = movePath  }
 
 end
@@ -32,7 +31,6 @@ function getNearestWeapon(marineEntity)
 	gameEntities = Game.Map:entities_in(0, 0, Game.Map.width, Game.Map.height)
 	nearestWeapon = nil
 	shortestPath = -1
-	print("searching nearest weapon...")
 	for _, v in pairs(gameEntities) do
 		if isWeapon(v) then
 			if nearestWeapon == nil then
@@ -50,7 +48,6 @@ function getNearestWeapon(marineEntity)
 			end
 		end
 	end
-	print("nearest weapon: " .. nearestWeapon.Type .. " (X:".. nearestWeapon.Bounds.X  .. ",Y:"..  nearestWeapon.Bounds.Y .. "), path length:" .. lengthOfArray(shortestPath))
 	return nearestWeapon
 end
 
@@ -80,7 +77,6 @@ function isStandAboveAWeapon(marine)
   entities = Game.Map:entities_in(marine.Bounds.X, marine.Bounds.Y, 1, 1)
   for _, v in pairs(entities) do
     if isWeapon(v) then
-      print("we are standing above weapon: " .. v.Type)
       return true
     end
   end

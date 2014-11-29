@@ -14,7 +14,7 @@ end
 
 function equipWeapons(marine, x, y)	
   local Command = {}
-	listofWeapons = {"w_bfg", "w_plasma", "w_chaingun", "w_shotgun", "w_machinegun", "w_pistol", "w_chainsaw", "w_hand"}
+	listofWeapons = {"w_bfg", "w_plasma", "w_grenade", "w_chaingun", "w_shotgun", "w_machinegun", "w_pistol", "w_chainsaw", "w_hand"}
 	for k, v in pairs(listofWeapons) do
 		if inTable(marine.Inventory, v)	then
 			print ("SHOOT:Equipped weapon " .. v)
@@ -30,7 +30,7 @@ function inTable(tbl, item)
     return false
 end
 
-function getMaximumRange(marine)
+function getEffectiveRange(marine)
   maxRange = 1
   for k,v in pairs(marine.Inventory) do
     currentRange = returnWeaponRange(k, marine)
@@ -44,19 +44,19 @@ end
 -- fix for csapattiszt
 function returnWeaponRange(weapon, marine)
   if(weapon == "grenade") then
-    return 6+marine.Accuracy
+    return 6+marine.Accuracy-2
   elseif(weapon == "w_bfg") then
-    return 15+marine.Accuracy
+    return 15+marine.Accuracy-4
   elseif(weapon == "w_plasma") then
-    return 10+marine.Accuracy
+    return 10+marine.Accuracy-3
   elseif(weapon == "w_chaingun") then
-    return 9
+    return 9-3
   elseif(weapon == "w_shotgun") then
-    return 4
+    return 4-1
   elseif(weapon == "w_machinegun") then
-    return 8+marine.Accuracy
+    return 8+marine.Accuracy-3
   elseif(weapon == "w_pistol") then
-    return 7+marine.Accuracy
+    return 7+marine.Accuracy-2
   else
     return 1
   end
