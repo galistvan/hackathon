@@ -52,12 +52,19 @@ function OwnMarine:provide_steps(prev)
     table.insert(Commands, {Command = "move", Path = movePath })
   end
       table.insert(Commands, { Command = "done" })
+	  printTable(Commands)
 	return Commands
 end
 
-function OwnMarine:on_aiming(attack) end
-function OwnMarine:on_dodging(attack) end
-function OwnMarine:on_knockback(attack, entity) end
+function OwnMarine:on_aiming(attack) 
+	print("AIMING")
+end
+function OwnMarine:on_dodging(attack) 
+	print("DODGING")
+end
+function OwnMarine:on_knockback(attack, entity) 
+	print("KNOCKBACK")
+end
 
 function OwnMarine:isIHaveThatWeapon(nearestWeapon) 
 	for _,v in pairs(self.availableWeapons) do
@@ -93,8 +100,9 @@ function OwnMarine:HandleEvents(name, event)
 end
 
 function printTable(table) 
+	print("WTF")
 	for k, v in pairs( table ) do
-		print(k, v)
+		print("KEY", k,"COMMAND", v.Command)
 	end
 end
 

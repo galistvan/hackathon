@@ -1,11 +1,11 @@
 --meg hianyzik, hogyha MedKit-en vagy MegaHealth-n all akkor felvegye es hasznalja
 
 function getHealth(marine)
-	medkit = Game.Map:get_entities("i_medkit")
-	megahealth = Game.Map:get_entities("i_megahealth")
-	env_health = Game.Map:get_entities("env_heal")
-	minLength = 100
-	minPath = nil
+	local medkit = Game.Map:get_entities("i_medkit")
+	local megahealth = Game.Map:get_entities("i_megahealth")
+	local env_health = Game.Map:get_entities("env_heal")
+	local minLength = 100
+	local minPath = nil
 	
 	print("MedKit count:"..#medkit)
 	if #medkit > 0 then
