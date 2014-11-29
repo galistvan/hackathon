@@ -16,10 +16,27 @@ function makeDecision(marine, nearestEnemy, nearestWeapon)
       elseif(enemyInSight(marine, nearestEnemy) <= 0) then
         if(checkIfMovingOnceEnablesLos(marine, nearestEnemy)) then
           local movePath = determineAttackPath(marine, nearestEnemy.Bounds.X, nearestEnemy.Bounds.Y)
-          action[1] = "moveandaim"
-          action[2] = {nearestEnemy.Bounds.X, nearestEnemy.Bounds.Y}
-          action[3] = "ready"
-          action[4]=reformMovePath(movePath, marine, nearestEnemy)
+          local finalMovePath = reformMovePath(movePath, marine, nearestEnemy)
+            local finalDestination = finalMovePath[#finalMovePath]
+            if(Game.Map:cell_has_los(finalDestination.X, finalDestination.Y, nearestEnemy.Bounds.X, nearestEnemy.Bounds.Y, "ObstaclesAndEntities")) then
+              if(lengthOfArray(finalMovePath) <= 0 and Game.Map:entity_has_los(marine, nearestEnemy.Bounds.X, nearestEnemy.Bounds.Y)) then
+                action[1] = "movetokill"
+                action[2] = {nearestEnemy.Bounds.X, nearestEnemy.Bounds.Y}
+                action[3] = "advance"
+                action[4]=finalMovePath
+              else
+                action[1] = "moveandaim"
+                action[2] = {nearestEnemy.Bounds.X, nearestEnemy.Bounds.Y}
+                action[3] = "ready"
+                action[4]=finalMovePath
+              end
+            else
+                action[1] = "moveandaim"
+                action[2] = {nearestEnemy.Bounds.X, nearestEnemy.Bounds.Y}
+                action[3] = "ready"
+                action[4]=finalMovePath
+            end
+              
         else
           -- we can also wait and aim to have a better shot at it or dodge, depending on our health/his weapon
           local movePath = determineAttackPath(marine, nearestEnemy.Bounds.X, nearestEnemy.Bounds.Y)
