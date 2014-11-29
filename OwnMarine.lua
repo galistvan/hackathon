@@ -59,24 +59,11 @@ function OwnMarine:provide_steps(prev)
     table.insert(Commands, shootWeapon(marine, whatTodo[2][1], whatTodo[2][2]))
   elseif whatTodo[1] == "move" then
     print("Marine: " .. marine.Id .. " is moving towards enemy!", "target", self.nearestEnemy.Id)
-
-    local movePath = determineAttackPath(marine, whatTodo[2][1], whatTodo[2][2])
-    if(movePath == -1) then
-      print("Marine: " .. marine.Id .. " has No route to enemy, Going for weapon!", "target", self.nearestEnemy.Id)
-      table.insert(Commands, doWeaponPickUp(self, marine, self.nearestWeapon))
-    else
-      table.insert(Commands, {Command = "move", Path = movePath })
-    end
+      table.insert(Commands, {Command = "move", Path = whatTodo[4] })
   elseif whatTodo[1] == "backandkill" then
-    local movePath = determineRetreatPath(marine, whatTodo[2][1], whatTodo[2][2])
-    if(#movePath == 0 and enemyInSight(marine, self.nearestEnemy) == -1) then
-      print("Marine: " .. marine.Id .. " has No route to enemy, Going for weapon!", "target", self.nearestEnemy.Id)
-      table.insert(Commands, doWeaponPickUp(self, marine, self.nearestWeapon))
-    else
-      table.insert(Commands, {Command = "move", Path = movePath })
+      table.insert(Commands, {Command = "move", Path = whatTodo[4] })
       table.insert(Commands, equipWeapons(marine, whatTodo[2][1], whatTodo[2][2]))
       table.insert(Commands, shootWeapon(marine, whatTodo[2][1], whatTodo[2][2]))
-    end
   elseif whatTodo[1] == "movetokill" then
     local movePath = determineAttackPath(marine, whatTodo[2][1], whatTodo[2][2])
     if(#movePath == 0 and enemyInSight(marine, self.nearestEnemy) == -1) then
@@ -104,31 +91,7 @@ function OwnMarine:on_knockback(attack, entity)
   print("KNOCKBACK")
 end
 
-function determineRetreatPath(marine, x, y)
-  -- get a position where you still have LOS and is further away
-  local retreatXDirection = marine.Bounds.X - x;
-  local retreatYDirection = marine.Bounds.Y - y;
-  if(retreatXDirection <= 0) then
-    retreatXCoords = {marine.Bounds.X -2, marine.Bounds.X -3, marine.Bounds.X -4}
-  else
-    retreatXCoords = {marine.Bounds.X +2, marine.Bounds.X +3, marine.Bounds.X +4}
-  end
-  if(retreatYDirection <= 0) then
-    retreatYCoords = {marine.Bounds.Y -2, marine.Bounds.Y -3, marine.Bounds.Y -4}
-  else
-    retreatYCoords = {marine.Bounds.Y +2, marine.Bounds.Y +3, marine.Bounds.Y +4}
-  end
-  for kx,vx in ipairs(retreatXCoords) do
-    for ky,vy in ipairs(retreatYCoords) do
-      movePath = Game.Map:get_move_path(marine.Id, vx, vy)
-      LOS = Game.Map:cell_has_los(vx, vy, x, y, "ObstaclesAndEntities")
-      if(#movePath > 0 and LOS) then
-        return movePath
-      end
-    end
-  end
-  return {}
-end
+
 
 function printTable(table)
   for k, v in pairs( table ) do
@@ -140,14 +103,4 @@ function printCommands(table)
   for k, v in pairs( table ) do
     print("KEY", k,"COMMAND", v.Command)
   end
-end
-
-function determineAttackPath(marine, x, y)
-  local currentPath = Game.Map:get_attack_path(marine.Id, x, y)
-  if(#currentPath <= 0) then
-    return -1
-  end
-  local lastStep = currentPath[#currentPath-1]
-  local correctPath = Game.Map:get_move_path(marine.Id, lastStep.X, lastStep.Y)
-  return getFirstNItemsFromList(marine.MovePoints, correctPath)
 end

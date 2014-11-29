@@ -21,7 +21,8 @@ function equipWeapons(marine, x, y)
         print ("SHOOT:Equipped weapon " .. v)
         return {Command = "select_weapon", Weapon = v}
 		  else
-		    if(getDistance(marine,x,y) < returnWeaponRange(weapon, marine)) then
+		    print("Distance to enemy: " .. getDistance(marine,x,y) .. "Effective range for " .. v .. " is ".. returnWeaponRange(v, marine))
+		    if(getDistance(marine,x,y) < returnWeaponRange(v, marine)) then
   			  print ("SHOOT:Equipped weapon " .. v)
   			  return {Command = "select_weapon", Weapon = v}
 			  else
@@ -57,20 +58,20 @@ end
 
 -- fix for csapattiszt
 function returnWeaponRange(weapon, marine)
-  if(weapon == "grenade") then
-    return 6+marine.Accuracy-2
+  if(weapon == "w_grenade") then
+    return 6+marine.Accuracy-1
   elseif(weapon == "w_bfg") then
-    return 15+marine.Accuracy-4
+    return 15+marine.Accuracy-2
   elseif(weapon == "w_plasma") then
-    return 10+marine.Accuracy-3
+    return 10+marine.Accuracy-1
   elseif(weapon == "w_chaingun") then
     return 9-3
   elseif(weapon == "w_shotgun") then
     return 4-1
   elseif(weapon == "w_machinegun") then
-    return 8+marine.Accuracy-3
+    return 8+marine.Accuracy-1
   elseif(weapon == "w_pistol") then
-    return 7+marine.Accuracy-2
+    return 7+marine.Accuracy-4
   else
     return 1
   end
