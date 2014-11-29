@@ -46,6 +46,7 @@ function OwnMarine:select_mode()
 end
 
 function OwnMarine:provide_steps(prev)
+  if (prev) then return nil end
   local Commands = {}
   local marine = self:get_marine()
   local whatTodo = makeDecision(marine, self.nearestEnemy, self.nearestWeapon)
