@@ -60,7 +60,7 @@ end
 -- fix for csapattiszt
 function returnWeaponRange(weapon, marine)
   if(weapon == "w_grenade") then
-    return 6+marine.Accuracy-1
+    return 5+marine.Accuracy-1
   elseif(weapon == "w_bfg") then
     return 15+marine.Accuracy-2
   elseif(weapon == "w_plasma") then
