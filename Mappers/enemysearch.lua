@@ -63,17 +63,17 @@ function isEnemy(tbl, item, ownMarine)
 	end
 	
 	if item.Id == ownMarine.Id then
-		print("Sajat magam")
+		--print("Sajat magam")
 		return false
 	end
 	
 	for i, v in pairs(tbl) do 
 		if v == item.Id then 
-			print("Sajat emberem")	
+			--print("Sajat emberem")	
 			return false
 		end
 	end
 
-	print("ENEMY")
+	--print("ENEMY")
     return true
 end
