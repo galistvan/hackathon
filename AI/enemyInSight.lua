@@ -1,4 +1,4 @@
-function enemyInSight(marine, availableWeapons, availableItems, availableAmmo, nearestEnemy, nearestWeapon)
+function enemyInSight(marine, nearestEnemy, nearestWeapon)
   print("enemy is at : ")
   print(marine.Id,nearestEnemy.Bounds.X,nearestEnemy.Bounds.Y)
 	if (not Game.Map:entity_has_los(marine.Id, nearestEnemy.Bounds.X, nearestEnemy.Bounds.Y)) then

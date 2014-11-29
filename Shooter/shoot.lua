@@ -1,6 +1,6 @@
-function equipWeapon(marine, x, y, availableWeapons)
+function equipWeapon(marine, x, y)
   Command = {}
-  equipWeaponsCommand = equipWeapons(marine, x, y, availableWeapons)
+  equipWeaponsCommand = equipWeapons(marine, x, y)
 	table.insert(Command, equipWeaponsCommand)
 	return Command
 	
