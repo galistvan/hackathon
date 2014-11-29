@@ -1,6 +1,7 @@
 require 'Shooter.shoot'
 require 'AI.makeDecision'
 require 'Mappers.weaponsearch'
+require 'Actions.Health'
 
 OwnMarine = class( "Marine" )
 
@@ -44,6 +45,9 @@ function OwnMarine:provide_steps(prev)
   if whatTodo[1] == "pickUpWeapon" then
     print("Going for weapon!")
     table.insert(Commands, doWeaponPickUp(self, marine, nearestWeapon))
+  elseif whatTodo[1] == "heal" then
+    print("Going for medkit!")
+    table.insert(Commands, getHealth(marine))
   elseif whatTodo[1] == "attack" then
     print("Attacking!!")
     table.insert(Commands, equipWeapons(marine, whatTodo[2][1], whatTodo[2][2]))
@@ -52,7 +56,12 @@ function OwnMarine:provide_steps(prev)
     print("moving towards enemy!")
 
     movePath = determineAttackPath(marine, whatTodo[2][1], whatTodo[2][2])
-    table.insert(Commands, {Command = "move", Path = movePath })
+    if(movePath == -1) then
+      print("No route to enemy, Going for weapon!")
+      table.insert(Commands, doWeaponPickUp(self, marine, nearestWeapon))
+    else
+      table.insert(Commands, {Command = "move", Path = movePath })
+    end
   elseif whatTodo[1] == "movetokill" then
     -- 1 movement 1 shoot
   end
@@ -72,6 +81,9 @@ end
 
 function determineAttackPath(marine, x, y)
   local currentPath = Game.Map:get_attack_path(marine.Id, x, y)
+  if(#currentPath <= 0) then
+    return -1
+  end
   local lastStep = currentPath[#currentPath-1]
   local correctPath = Game.Map:get_move_path(marine.Id, lastStep.X, lastStep.Y)
   return getFirstNItemsFromList(marine.MovePoints, correctPath)

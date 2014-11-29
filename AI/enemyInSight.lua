@@ -1,4 +1,4 @@
-function enemyInSight(marine, nearestEnemy, nearestWeapon)
+function enemyInSight(marine, nearestEnemy)
 	if (not Game.Map:entity_has_los(marine.Id, nearestEnemy.Bounds.X, nearestEnemy.Bounds.Y)) then
 		return -1
 	end
