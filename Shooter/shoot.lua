@@ -8,7 +8,9 @@ function equipWeapon(marine, x, y)
 end
 
 function shootWeapon(marine, x, y)
-  attackCommand = {Command = "attack", Target = { X = x, Y = y } }
+  local canDoAimed = marine.CanDoAimed;
+  print(marine.Id .. " Is going for an aimed shot!!!")
+  attackCommand = {Command = "attack", Aimed= canDoAimed, Target = { X = x, Y = y } }
   return attackCommand
 end
 
@@ -60,7 +62,7 @@ end
 -- fix for csapattiszt
 function returnWeaponRange(weapon, marine)
   if(weapon == "w_grenade") then
-    return 6+marine.Accuracy-1
+    return 5+marine.Accuracy-1
   elseif(weapon == "w_bfg") then
     return 15+marine.Accuracy-2
   elseif(weapon == "w_plasma") then
