@@ -31,9 +31,9 @@ function inTable(tbl, item)
     return false
 end
 
-function getMaximumRange(marine, availableWeapons)
+function getMaximumRange(marine)
   maxRange = 1
-  for k,v in ipairs(marine.Inventory) do
+  for k,v in pairs(marine.Inventory) do
     currentRange = returnWeaponRange(k, marine)
     if currentRange > maxRange then
       maxRange = currentRange
@@ -62,4 +62,11 @@ function returnWeaponRange(weapon, marine)
     return 1
   end
 
+end
+
+
+function printTable(table) 
+  for k, v in pairs( table ) do
+    print(k, v)
+  end
 end
