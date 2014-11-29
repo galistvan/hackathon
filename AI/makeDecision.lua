@@ -3,21 +3,24 @@ require 'Shooter.shoot'
 
 function makeDecision(marine, nearestEnemy, nearestWeapon) 
   local action = {}
-    if (lengthOfArray(marine.Inventory) <= 2) then
+    if (lengthOfArray(marine.Inventory) <= 2 or nearestEnemy == nil) then
         action[1]="pickUpWeapon"
         action[2]="";
         action[3]="sprint"
       elseif(enemyInSight(marine, nearestEnemy, nearestWeapon) <= 0) then 
+        -- check if 4 movement enables LOS
+        -- if it does, move and shoot
+        -- we can also wait and aim to have a better shot at it or dodge, depending on our health/his weapon
         action[1]="move"
         action[2]={nearestEnemy.Bounds.X, nearestEnemy.Bounds.Y}
-        action[3]="advance"
+        action[3]="sprint"
       else
-        if(getMaximumRange(marine) > enemyInSight(marine, nearestEnemy, nearestWeapon)) then  
+        if(getEffectiveRange(marine) > enemyInSight(marine, nearestEnemy, nearestWeapon)) then  
           action[1]="attack"
           action[2]={nearestEnemy.Bounds.X, nearestEnemy.Bounds.Y}
           action[3]="unload"
         else 
-          action[1]="move"
+          action[1]="movetokill"
           action[2]={nearestEnemy.Bounds.X, nearestEnemy.Bounds.Y}
           action[3]="advance"
         end

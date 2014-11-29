@@ -53,6 +53,8 @@ function OwnMarine:provide_steps(prev)
 
     movePath = determineAttackPath(marine, whatTodo[2][1], whatTodo[2][2])
     table.insert(Commands, {Command = "move", Path = movePath })
+  elseif whatTodo[1] == "movetokill" then
+    -- 1 movement 1 shoot
   end
   table.insert(Commands, { Command = "done" })
   return Commands
