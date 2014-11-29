@@ -34,7 +34,7 @@ end
 function getMaximumRange(marine, availableWeapons)
   maxRange = 1
   for k,v in ipairs(marine.Inventory) do
-    currentRange = returnWeaponRange(v, marine)
+    currentRange = returnWeaponRange(k, marine)
     if currentRange > maxRange then
       maxRange = currentRange
     end

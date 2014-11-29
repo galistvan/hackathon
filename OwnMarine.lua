@@ -50,6 +50,7 @@ function OwnMarine:provide_steps(prev)
     
     currentPath = Game.Map:get_move_path(marine.Id, whatTodo[2][1], whatTodo[2][2])
 	  movePath = lolGetFirstNItemsFromList(marine.MovePoints, currentPath)
+	  printTable(movePath)
     table.insert(Commands, {Command = "move", Path = movePath })
   end
       table.insert(Commands, { Command = "done" })

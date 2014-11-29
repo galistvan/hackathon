@@ -2,8 +2,6 @@ require 'AI.enemyInSight'
 
 function makeDecision(marine, availableWeapons, availableItems, availableAmmo, nearestEnemy, nearestWeapon) 
   local action = {}
-  print("MARINEINV:::")
-  print(lengthOfArray(marine.Inventory))
     if (lengthOfArray(marine.Inventory) <= 2) then
         action[1]="pickUpWeapon"
         action[2]="";
