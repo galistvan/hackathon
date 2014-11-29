@@ -61,7 +61,7 @@ end
 
 -- fix for csapattiszt
 function returnWeaponRange(weapon, marine)
-  if(marine.isSniper()) then
+  if(marine.isSniper) then
     baseAccuracy = 3
   else
     baseAccuracy = 0
