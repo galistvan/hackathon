@@ -1,5 +1,6 @@
 
 function doWeaponPickUp(marine, marineEntity, nearestWeapon)
+  print("Nearest Weapon: " .. nearestWeapon.Type .. " Coords:" .. nearestWeapon.Bounds.X .. ":" .. nearestWeapon.Bounds.Y)
   if (isStandAboveAWeapon(marineEntity) and not isIHaveThatWeapon(nearestWeapon, marineEntity))then
    return { Command = "pickup" }
   end

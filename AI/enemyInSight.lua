@@ -7,3 +7,9 @@ function enemyInSight(marine, nearestEnemy)
 	return i
 end
 
+function getDistance(marine, x, y)
+  attack_path = Game.Map:get_attack_path(marine.Id, x, y)
+  i = #attack_path
+  return i
+end
+

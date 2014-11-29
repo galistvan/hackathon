@@ -14,11 +14,21 @@ end
 
 function equipWeapons(marine, x, y)	
   local Command = {}
-	listofWeapons = {"w_bfg", "w_plasma", "w_grenade", "w_chaingun", "w_shotgun", "w_machinegun", "w_pistol", "w_chainsaw", "w_hand"}
+	listofWeapons = {"w_bfg", "w_plasma", "w_grenade", "w_shotgun", "w_chaingun", "w_machinegun", "w_pistol", "w_chainsaw", "w_hand"}
 	for k, v in pairs(listofWeapons) do
 		if inTable(marine.Inventory, v)	then
-			print ("SHOOT:Equipped weapon " .. v)
-			return {Command = "select_weapon", Weapon = v}
+		  if(v == "w_grenade" and getDistance(marine,x,y) > 2) then
+        print ("SHOOT:Equipped weapon " .. v)
+        return {Command = "select_weapon", Weapon = v}
+		  else
+		    if(getDistance(marine,x,y) < returnWeaponRange(weapon, marine)) then
+  			  print ("SHOOT:Equipped weapon " .. v)
+  			  return {Command = "select_weapon", Weapon = v}
+			  else
+          print ("SHOOT:Defaulting to pistol ")
+          return {Command = "select_weapon", Weapon = "w_pistol"}
+			  end
+			end
 		end
 	end
 end
@@ -39,6 +49,10 @@ function getEffectiveRange(marine)
     end
   end
   return maxRange
+end
+
+function hasGrenade(marine)
+return inTable(marine.Inventory, "w_grenade")
 end
 
 -- fix for csapattiszt
