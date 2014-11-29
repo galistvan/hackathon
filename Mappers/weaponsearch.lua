@@ -5,9 +5,6 @@ function doWeaponPickUp(marine, marineEntity, nearestWeapon)
   end
   local weaponPath = Game.Map:get_move_path(marineEntity.Id, nearestWeapon.Bounds.X, nearestWeapon.Bounds.Y)
   local movePath = getFirstNItemsFromList(marineEntity.MovePoints, weaponPath)
-  if(not Game.Map:get_move_path(marineEntity.Id, movePath[lengthOfArray(movePath)].X, movePath[lengthOfArray(movePath)].Y)) then
-    table.remove(movePath, lengthOfArray(movePath))
-  end
   return { Command = "move", Path = movePath  }
 end
 
