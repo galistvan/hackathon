@@ -12,11 +12,11 @@ function shootWeapon(marine, x, y)
   return attackCommand
 end
 
-function equipWeapons(marine, x, y, marine.Inventory)	
+function equipWeapons(marine, x, y, availableWeapons)	
   local Command = {}
 	listofWeapons = {"w_bfg", "w_plasma", "w_chaingun", "w_shotgun", "w_machinegun", "w_pistol", "w_chainsaw", "w_hand"}
 	for k, v in ipairs(listofWeapons) do
-		if inTable(availableWeapons, v)	then
+		if inTable(marine.Inventory, v)	then
 			print ("SHOOT:Equipped weapon " .. v)
 			equipWeaponLocalCommand = {Command = "select_weapon", Weapon = v};
 			return equipWeaponLocalCommand
