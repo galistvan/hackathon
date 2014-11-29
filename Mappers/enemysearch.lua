@@ -28,9 +28,9 @@ function getNearestEnemy(marineEntity, ownMarines)
 		if isEnemy(ownMarines,v,marineEntity) then
 			if nearestEnemy == nil then
 				nearestEnemy = v
-				shortestPath = Game.Map:get_move_path(marineEntity.Id, v.Bounds.X, v.Bounds.Y)
+				shortestPath = Game.Map:get_attack_path(marineEntity.Id, v.Bounds.X, v.Bounds.Y)
 			else
-		 		local currentPath = Game.Map:get_move_path(marineEntity.Id, v.Bounds.X, v.Bounds.Y)
+		 		local currentPath = Game.Map:get_attack_path(marineEntity.Id, v.Bounds.X, v.Bounds.Y)
 				if lengthOfArray(currentPath) < lengthOfArray(shortestPath) then
 					nearestEnemy = v
 					shortestPath = currentPath
