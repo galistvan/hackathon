@@ -61,20 +61,25 @@ end
 
 -- fix for csapattiszt
 function returnWeaponRange(weapon, marine)
+  if(marine.isSniper()) then
+    baseAccuracy = 3
+  else
+    baseAccuracy = 0
+  end
   if(weapon == "w_grenade") then
-    return 5+marine.Accuracy-1
+    return 5+baseAccuracy-1
   elseif(weapon == "w_bfg") then
-    return 15+marine.Accuracy-2
+    return 15+baseAccuracy-2
   elseif(weapon == "w_plasma") then
-    return 10+marine.Accuracy-1
+    return 10+baseAccuracy-1
   elseif(weapon == "w_chaingun") then
-    return 9-3
+    return 9+baseAccuracy-3
   elseif(weapon == "w_shotgun") then
-    return 4-1
+    return 4+baseAccuracy-1
   elseif(weapon == "w_machinegun") then
-    return 8+marine.Accuracy-1
+    return 8+baseAccuracy-1
   elseif(weapon == "w_pistol") then
-    return 7+marine.Accuracy-4
+    return 7+baseAccuracy-4
   else
     return 1
   end
