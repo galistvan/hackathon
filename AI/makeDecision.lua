@@ -13,18 +13,30 @@ function makeDecision(marine, nearestEnemy, nearestWeapon)
         action[2]="";
         action[3]="sprint"
       elseif(enemyInSight(marine, nearestEnemy) <= 0) then 
+        if(checkIfMovingOnceEnablesLos(marine, nearestEnemy)) then
+          action[1] = "movetokill"
+          action[2] = {nearestEnemy.Bounds.X, nearestEnemy.Bounds.Y}
+          action[3] = "advance"
+        else
         -- check if 4 movement enables LOS
         -- if it does, move and shoot
         -- we can also wait and aim to have a better shot at it or dodge, depending on our health/his weapon
-        action[1]="move"
-        action[2]={nearestEnemy.Bounds.X, nearestEnemy.Bounds.Y}
-        action[3]="sprint"
+          action[1]="move"
+          action[2]={nearestEnemy.Bounds.X, nearestEnemy.Bounds.Y}
+          action[3]="sprint"
+        end
       else
         if(getEffectiveRange(marine) > enemyInSight(marine, nearestEnemy)) then  
-          action[1]="attack"
+          if(enemyInSight(marine, nearestEnemy) < 3) then
+          action[1]="backandkill"
           action[2]={nearestEnemy.Bounds.X, nearestEnemy.Bounds.Y}
-          action[3]="unload"
-        else 
+          action[3]="advance"
+          else
+            action[1]="attack"
+            action[2]={nearestEnemy.Bounds.X, nearestEnemy.Bounds.Y}
+            action[3]="unload"
+          end
+        else
           action[1]="movetokill"
           action[2]={nearestEnemy.Bounds.X, nearestEnemy.Bounds.Y}
           action[3]="advance"
@@ -40,4 +52,10 @@ function lengthOfArray(t)
       count = count + 1
   end
   return count 
+end
+
+function checkIfMovingOnceEnablesLos(marine, enemy)
+  local attackPath = Game.Map:get_attack_path(marine.Id, nearestEnemy.Bounds.X, nearestEnemy.Bounds.Y)
+  if(lengthOfArray(attackPath) < 4) then return true end
+  return Game.Map:cell_has_los(attackPath[4].X, attackPath[4].Y, enemy.Bounds.X, enemy.Bounds.Y, "ObstaclesAndEntities")
 end

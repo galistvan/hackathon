@@ -62,8 +62,27 @@ function OwnMarine:provide_steps(prev)
     else
       table.insert(Commands, {Command = "move", Path = movePath })
     end
+  elseif whatTodo[1] == "backandkill" then
+    movePath = determineRetreatPath(marine, whatTodo[2][1], whatTodo[2][2])
+    if(#movePath == 0 and enemyInSight(marine, nearestEnemy) == -1) then
+      print("No route to enemy, Going for weapon!")
+      table.insert(Commands, doWeaponPickUp(self, marine, nearestWeapon))
+    else
+      table.insert(Commands, {Command = "move", Path = movePath })
+      table.insert(Commands, equipWeapons(marine, whatTodo[2][1], whatTodo[2][2]))
+      table.insert(Commands, shootWeapon(marine, whatTodo[2][1], whatTodo[2][2]))
+    end
   elseif whatTodo[1] == "movetokill" then
-    -- 1 movement 1 shoot
+    movePath = determineAttackPath(marine, whatTodo[2][1], whatTodo[2][2])
+    if(#movePath == 0 and enemyInSight(marine, nearestEnemy) == -1) then
+      print("No route to enemy, Going for weapon!")
+      table.insert(Commands, doWeaponPickUp(self, marine, nearestWeapon))
+    elseif(enemyInSight(marine, nearestEnemy) > 0) then
+      table.insert(Commands, equipWeapons(marine, whatTodo[2][1], whatTodo[2][2]))
+      table.insert(Commands, shootWeapon(marine, whatTodo[2][1], whatTodo[2][2]))
+    else
+      table.insert(Commands, {Command = "move", Path = movePath })
+    end
   end
   table.insert(Commands, { Command = "done" })
   return Commands
@@ -77,6 +96,32 @@ function OwnMarine:on_dodging(attack)
 end
 function OwnMarine:on_knockback(attack, entity)
   print("KNOCKBACK")
+end
+
+function determineRetreatPath(marine, x, y)
+  -- get a position where you still have LOS and is further away
+  local retreatXDirection = marine.Bounds.X - x;
+  local retreatYDirection = marine.Bounds.Y - y;
+  if(retreatXDirection <= 0) then
+    retreatXCoords = {marine.Bounds.X -2, marine.Bounds.X -3, marine.Bounds.X -4}
+  else
+    retreatXCoords = {marine.Bounds.X +2, marine.Bounds.X +3, marine.Bounds.X +4}
+  end
+  if(retreatYDirection <= 0) then
+    retreatYCoords = {marine.Bounds.Y -2, marine.Bounds.Y -3, marine.Bounds.Y -4}
+  else
+    retreatYCoords = {marine.Bounds.Y +2, marine.Bounds.Y +3, marine.Bounds.Y +4}
+  end
+  for kx,vx in ipairs(retreatXCoords) do
+    for ky,vy in ipairs(retreatYCoords) do
+      movePath = Game.Map:get_move_path(marine.Id, vx, vy)
+      LOS = Game.Map:cell_has_los(vx, vy, x, y, "ObstaclesAndEntities")
+      if(#movePath > 0 and LOS) then
+        return movePath
+      end
+    end
+  end
+  return {}
 end
 
 function determineAttackPath(marine, x, y)
