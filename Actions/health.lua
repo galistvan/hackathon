@@ -45,9 +45,6 @@ function getHealth(marine)
 	end
 	
 	movePath = getFirstNItemsFromList(marine.MovePoints, minPath)
-  if(lengthOfArray(Game.Map:get_move_path(marineEntity.Id, movePath[lengthOfArray(movePath)].X, movePath[lengthOfArray(movePath)].Y)) <= 0) then
-    table.remove(movePath, lengthOfArray(movePath))
-  end
     return { Command = "move", Path = movePath  }
 end
 
