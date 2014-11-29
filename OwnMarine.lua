@@ -46,11 +46,10 @@ function OwnMarine:provide_steps(prev)
     table.insert(Commands, equipWeapon(marine, whatTodo[2][1], whatTodo[2][2], self.availableWeapons, self.availableAmmo))
     table.insert(Commands, shootWeapon(marine, whatTodo[2][1], whatTodo[2][2]))
   elseif whatTodo[1] == "move" then
-	print("marine:", marine.Id, marine.Bounds.X, marine.Bounds.Y)
-	print("nearestEnemy:", nearestEnemy.Id, nearestEnemy.Bounds.X, nearestEnemy.Bounds.Y)
-
+    print("Own coords: " .. marineX .. ":" .. marineY .. " Enemy coords: " .. whatTodo[2][1] .. ":" .. whatTodo[2][2])
+    
     currentPath = Game.Map:get_move_path(marine.Id, whatTodo[2][1], whatTodo[2][2])
-	movePath = getFirstNItemsFromList(marine.MovePoints, currentPath)
+	  movePath = getFirstNItemsFromList(marine.MovePoints, currentPath)
     table.insert(Commands, {Command = "move", Path = movePath })
   end
       table.insert(Commands, { Command = "done" })

@@ -2,7 +2,7 @@ require 'AI.enemyInSight'
 
 function makeDecision(marine, availableWeapons, availableItems, availableAmmo, nearestEnemy, nearestWeapon) 
   local action = {}
-    if (lengthOfArray(availableWeapons) <= 1) then
+    if (#marine.Inventory <= 2) then
         action[1]="pickUpWeapon"
         action[2]="";
         action[3]="sprint"
