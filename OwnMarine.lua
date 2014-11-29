@@ -17,6 +17,7 @@ function OwnMarine:initialize(player_index, marine_id, instance_index)
   self.isSniper= false
   self.isFrontGuard= false
   self.isGroundAssault = false
+  self.removedWeapons = {}
   table.insert(ownMarines,marine_id)
 end
 
@@ -48,6 +49,7 @@ function OwnMarine:provide_steps(prev)
   local Commands = {}
   local marine = self:get_marine()
   local whatTodo = makeDecision(marine, self.nearestEnemy, self.nearestWeapon)
+  marine.removedWeapons = {}
   
 
 

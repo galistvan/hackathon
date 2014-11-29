@@ -20,18 +20,21 @@ function equipWeapons(marine, x, y)
   local Command = {}
 	listofWeapons = {"w_bfg", "w_plasma", "w_grenade", "w_shotgun", "w_chaingun", "w_machinegun", "w_pistol", "w_chainsaw", "w_hand"}
 	for k, v in pairs(listofWeapons) do
-		if inTable(marine.Inventory, v)	then
+		if inTable(marine.Inventory, v) and not inTableB(marine.removedWeapons, v)	then
 		  if(v == "w_grenade" and getDistance(marine,x,y) > 2) then
         print ("SHOOT:Equipped weapon " .. v)
+        table.insert(marine.removedWeapons, v)
         return {Command = "select_weapon", Weapon = v}
 		  else
 		    print("Distance to enemy: " .. getDistance(marine,x,y) .. "Effective range for " .. v .. " is ".. returnWeaponRange(v, marine))
 		    if(getDistance(marine,x,y) < returnWeaponRange(v, marine)) then
   			  print ("SHOOT:Equipped weapon " .. v)
+          table.insert(marine.removedWeapons, v)
   			  return {Command = "select_weapon", Weapon = v}
 			  else
           print ("SHOOT:Defaulting to pistol ")
           marine.shouldGoForWeapons = true
+          table.insert(marine.removedWeapons, v)
           return {Command = "select_weapon", Weapon = "w_pistol"}
 			  end
 			end
@@ -42,6 +45,13 @@ end
 function inTable(tbl, item)
     for k, value in pairs(tbl) do
         if k == item then return k end
+    end
+    return false
+end
+
+function inTableB(tbl, item)
+    for k, value in pairs(tbl) do
+        if value == item then return k end
     end
     return false
 end
