@@ -48,9 +48,7 @@ function OwnMarine:provide_steps(prev)
   elseif whatTodo[1] == "move" then
     print("Own coords: " .. marineX .. ":" .. marineY .. " Enemy coords: " .. whatTodo[2][1] .. ":" .. whatTodo[2][2])
     
-    currentPath = Game.Map:get_move_path(marine.Id, whatTodo[2][1], whatTodo[2][2])
-	  movePath = lolGetFirstNItemsFromList(marine.MovePoints, currentPath)
-	  printTable(movePath)
+    movePath = determineAttackPath(marine, whatTodo[2][1], whatTodo[2][2])
     table.insert(Commands, {Command = "move", Path = movePath })
   end
       table.insert(Commands, { Command = "done" })
@@ -100,11 +98,9 @@ function printTable(table)
 	end
 end
 
-
-function lolGetFirstNItemsFromList(n, list)
-  resultList = {}
-  for i=1,n do 
-    table.insert(resultList,list[i])
-  end
-  return resultList
+function determineAttackPath(marine, x, y)
+  local currentPath = Game.Map:get_attack_path(marine.Id, x, y)
+  local lastStep = currentPath[#currentPath-1]
+  local correctPath = Game.Map:get_move_path(marine.Id, lastStep.X, lastStep.Y)
+  return getFirstNItemsFromList(marine.MovePoints, correctPath)
 end
