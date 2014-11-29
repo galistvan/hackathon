@@ -45,11 +45,10 @@ function getHealth(marine)
 	end
 	
 	movePath = getFirstNItemsFromList(marine.MovePoints, minPath)
-  if(not Game.Map:get_move_path(marineEntity.Id, movePath[lengthOfArray(movePath)].X, movePath[lengthOfArray(movePath)].Y)) then
-    table.remove(movePath, lengthOfArray(movePath))
-  end
     return { Command = "move", Path = movePath  }
+	
 end
+
 
 function getFirstNItemsFromList(n, list)
   resultList = {}
@@ -57,12 +56,4 @@ function getFirstNItemsFromList(n, list)
     table.insert(resultList,list[i])
   end
   return resultList
-end
-
-function lengthOfArray(t)
-  count = 0
-  for k,v in pairs(t) do
-      count = count + 1
-  end
-  return count 
 end
