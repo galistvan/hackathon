@@ -7,12 +7,10 @@ function getHealth(marine)
 	local minLength = 100
 	local minPath = nil
 	
-	print("MedKit count:"..#medkit)
 	if #medkit > 0 then
 		for k,v in ipairs(medkit) do
 			pathToMedkit =  Game.Map:get_move_path(marine.Id, v.Bounds.X, v.Bounds.Y)
 			i = #pathToMedkit
-			print("pathToMedkit length :"..i) 
 			if (minLength > i and i>0) then
 				minLength = i
 				minPath = pathToMedkit
@@ -20,12 +18,10 @@ function getHealth(marine)
 		end
 	end
 
-	print("Mega Health count:"..#megahealth)	
 	if #megahealth > 0 then
 		for k,v in ipairs(megahealth) do
 			pathToMegaHealth =  Game.Map:get_move_path(marine.Id, v.Bounds.X, v.Bounds.Y)
 			i = #pathToMegaHealth
-			print("pathToMegaHealth length :"..i) 
 			if (minLength > i and i>0) then
 				minLength = i
 				minPath = pathToMegaHealth
@@ -33,13 +29,11 @@ function getHealth(marine)
 		end
 	end
 	
-	print("Env health count:"..#env_health)
 	if #env_health > 0 then
 		if minLength > 24 then
 			for k,v in ipairs(env_health) do
 				pathToEnvHealth = Game.Map:get_move_path(marine.Id, v.Bounds.X, v.Bounds.Y)
 				i = # pathToEnvHealth
-				print("pathToEnvHealth length :"..i) 
 				if (minLength > i and i>0) then
 					minLength = i
 					minPath = pathToEnvHealth
