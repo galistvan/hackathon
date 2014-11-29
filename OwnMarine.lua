@@ -52,7 +52,7 @@ function OwnMarine:provide_steps(prev)
     table.insert(Commands, {Command = "move", Path = movePath })
   end
       table.insert(Commands, { Command = "done" })
-	  printTable(Commands)
+	  printCommands(Commands)
 	return Commands
 end
 
@@ -100,7 +100,12 @@ function OwnMarine:HandleEvents(name, event)
 end
 
 function printTable(table) 
-	print("WTF")
+	for k, v in pairs( table ) do
+		print("KEY", k,"VALUE", v)
+	end
+end
+
+function printCommands(table) 
 	for k, v in pairs( table ) do
 		print("KEY", k,"COMMAND", v.Command)
 	end
