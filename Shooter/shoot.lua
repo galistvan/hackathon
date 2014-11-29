@@ -9,15 +9,13 @@ end
 
 function shootWeapon(marine, x, y)
   attackCommand = {Command = "attack", Target = { X = x, Y = y } }
-  printTable(attackCommand)
-  printTable(attackCommand["Target"])
   return attackCommand
 end
 
 function equipWeapons(marine, x, y)	
   local Command = {}
 	listofWeapons = {"w_bfg", "w_plasma", "w_chaingun", "w_shotgun", "w_machinegun", "w_pistol", "w_chainsaw", "w_hand"}
-	for k, v in ipairs(listofWeapons) do
+	for k, v in pairs(listofWeapons) do
 		if inTable(marine.Inventory, v)	then
 			print ("SHOOT:Equipped weapon " .. v)
 			equipWeaponLocalCommand = {Command = "select_weapon", Weapon = v};
@@ -27,8 +25,8 @@ function equipWeapons(marine, x, y)
 end
 
 function inTable(tbl, item)
-    for k, value in ipairs(tbl) do
-        if value == item then return value end
+    for k, value in pairs(tbl) do
+        if k == item then return k end
     end
     return false
 end
