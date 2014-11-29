@@ -30,6 +30,7 @@ function OwnMarine:select_mode()
   self.nearestWeapon = getNearestWeapon(marine)
 
   local whatTodo = makeDecision(marine, self.nearestEnemy, self.nearestWeapon)
+  
   -- return "sprint"
   -- return "guard"
   -- return "ready"
