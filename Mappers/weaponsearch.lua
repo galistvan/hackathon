@@ -1,12 +1,11 @@
 
 function doWeaponPickUp(marine, marineEntity, nearestWeapon)
-  print("Nearest Weapon: " .. nearestWeapon.Type .. " Coords:" .. nearestWeapon.Bounds.X .. ":" .. nearestWeapon.Bounds.Y)
-  if (isStandAboveAWeapon(marineEntity) and not isIHaveThatWeapon(nearestWeapon, marineEntity))then
+  if (isStandAboveAWeapon(marineEntity))then
    return { Command = "pickup" }
   end
+  print ("Weapon: " .. nearestWeapon.Type)
   local weaponPath = Game.Map:get_move_path(marineEntity.Id, nearestWeapon.Bounds.X, nearestWeapon.Bounds.Y)
   local movePath = getFirstNItemsFromList(marineEntity.MovePoints, weaponPath)
-  print(marineEntity.Id, "go for weapon", nearestWeapon.Type, "path length", #movePath, "weaponPath", #weaponPath, "pos", "x",marineEntity.Bounds.X,"y",marineEntity.Bounds.Y, "wpos", "x",nearestWeapon.Bounds.X, "y", nearestWeapon.Bounds.Y)
   return { Command = "move", Path = movePath  }
 end
 
@@ -48,7 +47,8 @@ function getNearestWeapon(marineEntity)
   local shortestPath = Game.Map:get_move_path(marineEntity.Id, nearestWeapon.Bounds.X, nearestWeapon.Bounds.Y)
   for _, v in pairs(weapons) do
     local currentPath = Game.Map:get_move_path(marineEntity.Id, v.Bounds.X, v.Bounds.Y)
-    if #currentPath < #shortestPath and #currentPath > 0 then
+    if #currentPath < #shortestPath and #currentPath > 0 and not isIHaveThatWeapon(v, marineEntity) then
+      print("Choosen weapon is: " .. v.Type)
       nearestWeapon = v
       shortestPath = currentPath
     end
@@ -90,10 +90,18 @@ end
 
 function isIHaveThatWeapon(nearestWeapon, marineEntity) 
   for k,v in pairs(marineEntity.Inventory) do
-    if k.Type == nearestWeapon.Type then
-      print("marine", marineEntity.Id, "type", k.Type)
+    if k == nearestWeapon.Type then
       return true
     end
   end
   return false
+end
+
+
+function lengthOfArray(t)
+  count = 0
+  for k,v in pairs(t) do
+      count = count + 1
+  end
+  return count 
 end

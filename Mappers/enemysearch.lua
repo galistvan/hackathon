@@ -17,6 +17,8 @@ function printEntity(entity)
 	print("BlocksPath: " .. tostring(entity.BlocksPath))
 end
 
+
+-- rewrite to calculate LOS rules please
 function getNearestEnemy(marineEntity, ownMarines)
 	gameEntities = Game.Map:entities_in(0, 0, Game.Map.width, Game.Map.height)
 	nearestEnemy = nil
@@ -24,16 +26,11 @@ function getNearestEnemy(marineEntity, ownMarines)
 	enemies = {}
 	for _, v in pairs(gameEntities) do
 		if isEnemy(ownMarines,v,marineEntity) then
-			--print("weapon found " .. tostring(v.Type))
 			if nearestEnemy == nil then
 				nearestEnemy = v
-				--print(tostring(marineEntity))
-				--print(tostring(v.Bounds.X))
-				--print(tostring(v.Bounds.Y))
 				shortestPath = Game.Map:get_move_path(marineEntity.Id, v.Bounds.X, v.Bounds.Y)
 			else
 		 		local currentPath = Game.Map:get_move_path(marineEntity.Id, v.Bounds.X, v.Bounds.Y)
-				--print (lengthOfArray(currentPath))
 				if lengthOfArray(currentPath) < lengthOfArray(shortestPath) then
 					nearestEnemy = v
 					shortestPath = currentPath
@@ -41,9 +38,6 @@ function getNearestEnemy(marineEntity, ownMarines)
 			end
 		end
 	end
-	--print("marine: " .. marineEntity.Bounds.X, marineEntity.Bounds.Y)
-	--print("weapon: " .. nearestWeapon.Bounds.X, nearestWeapon.Bounds.Y)
-	--print("path = " .. lengthOfArray(shortestPath))
 	return nearestEnemy
 end
 
@@ -56,24 +50,16 @@ function lengthOfArray(t)
 end
 
 function isEnemy(tbl, item, ownMarine)
-
-
 	if item.Type ~= ownMarine.Type then
 		return false
 	end
-	
 	if item.Id == ownMarine.Id then
-		--print("Sajat magam")
 		return false
 	end
-	
 	for i, v in pairs(tbl) do 
 		if v == item.Id then 
-			--print("Sajat emberem")	
 			return false
 		end
 	end
-
-	--print("ENEMY")
     return true
 end
