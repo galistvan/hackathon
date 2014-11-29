@@ -12,7 +12,7 @@ function shootWeapon(marine, x, y)
   return attackCommand
 end
 
-function equipWeapons(marine, x, y, availableWeapons)	
+function equipWeapons(marine, x, y, marine.Inventory)	
   local Command = {}
 	listofWeapons = {"w_bfg", "w_plasma", "w_chaingun", "w_shotgun", "w_machinegun", "w_pistol", "w_chainsaw", "w_hand"}
 	for k, v in ipairs(listofWeapons) do
@@ -33,7 +33,7 @@ end
 
 function getMaximumRange(marine, availableWeapons)
   maxRange = 1
-  for k,v in ipairs(availableWeapons) do
+  for k,v in ipairs(marine.Inventory) do
     currentRange = returnWeaponRange(v, marine)
     if currentRange > maxRange then
       maxRange = currentRange
