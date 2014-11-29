@@ -58,7 +58,7 @@ end
 function isEnemy(tbl, item, ownMarine)
 
 
-	if item.Type ~= marine.Type then
+	if item.Type ~= ownMarine.Type then
 		return false
 	end
 	

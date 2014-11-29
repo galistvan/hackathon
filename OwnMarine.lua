@@ -3,7 +3,6 @@ require 'AI.makeDecision'
 require 'Mappers.weaponsearch'
 
 OwnMarine = class( "Marine" )
-ownMarines= {}
 
 function OwnMarine:initialize(player_index, marine_id, instance_index)
     self.player_index = player_index
@@ -13,7 +12,8 @@ function OwnMarine:initialize(player_index, marine_id, instance_index)
     self.availableItems = {}
     self.availableAmmo = {}
 	Game.register_event_handler(self.HandleEvents, self)
-	table.insert(ownMarines,marine_id)
+	self.ownMarines= {}
+	table.insert(self.ownMarines,marine_id)
 end
 
 function OwnMarine:get_marine()	
@@ -31,14 +31,14 @@ return "advance"
 end
 
 function OwnMarine:provide_steps(prev)
-	Commands = {}
-	marine = self:get_marine()
+	local Commands = {}
+	local marine = self:get_marine()
 	local marineX = getMarineCoordX(marine)
 	local marineY = getMarineCoordY(marine)
-	nearestEnemy = getNearestEnemy(marine,ownMarines)
-	nearestWeapon = getNearestWeapon(marine)
+	local nearestEnemy = getNearestEnemy(marine,self.ownMarines)
+	local nearestWeapon = getNearestWeapon(marine)
 
-  whatTodo = makeDecision(marine, self.availableWeapons, self.availabeItems, self.availableAmmo, nearestEnemy, nearestWeapon)
+  local whatTodo = makeDecision(marine, self.availableWeapons, self.availabeItems, self.availableAmmo, nearestEnemy, nearestWeapon)
 
   if whatTodo[1] == "pickUpWeapon" then
     table.insert(Commands, doWeaponPickUp(self, marine, nearestWeapon))
@@ -46,7 +46,10 @@ function OwnMarine:provide_steps(prev)
     table.insert(Commands, equipWeapon(marine, whatTodo[2][1], whatTodo[2][2], self.availableWeapons, self.availableAmmo))
     table.insert(Commands, shootWeapon(marine, whatTodo[2][1], whatTodo[2][2]))
   elseif whatTodo[1] == "move" then
-    currentPath = Game.Map:get_move_path(self.marine_id, whatTodo[2][1], whatTodo[2][2])
+	print("marine:", marine.Id, marine.Bounds.X, marine.Bounds.Y)
+	print("nearestEnemy:", nearestEnemy.Id, nearestEnemy.Bounds.X, nearestEnemy.Bounds.Y)
+
+    currentPath = Game.Map:get_move_path(marine.Id, whatTodo[2][1], whatTodo[2][2])
 	movePath = getFirstNItemsFromList(marine.MovePoints, currentPath)
     table.insert(Commands, {Command = "move", Path = movePath })
   end
