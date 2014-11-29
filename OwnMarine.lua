@@ -92,6 +92,9 @@ function OwnMarine:provide_steps(prev)
       table.insert(Commands, {Command = "move", Path = whatTodo[4] })
   end
   table.insert(Commands, { Command = "done" })
+  print("Move points :"..marine.MovePoints)
+  print("Attack points :"..marine.AttackPoints)
+  printCommands(Commands)
   return Commands
 end
 
@@ -114,6 +117,17 @@ end
 function printCommands(table)
   for k, v in pairs( table ) do
     print("KEY", k,"COMMAND", v.Command)
+	if v.Command == "move" then
+		printPath(v.Path)
+	end
+  end
+end
+
+function printPath(path)
+if path ~= nil then
+for k, v in pairs( path ) do
+    print("KEY", k,"X", v.X,"Y",v.Y)
+  end
   end
 end
 

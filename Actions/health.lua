@@ -45,7 +45,8 @@ function getHealth(marine)
 	end
 	
 	movePath = getFirstNItemsFromList(marine.MovePoints, minPath)
-    return { Command = "move", Path = movePath  }
+	goodMovePath = checkLastPointAvailableMed(marine, movePath)
+    return { Command = "move", Path = goodMovePath  }
 	
 end
 
@@ -56,4 +57,28 @@ function getFirstNItemsFromList(n, list)
     table.insert(resultList,list[i])
   end
   return resultList
+end
+
+function checkLastPointAvailableMed(marine, movePath)
+	if movePath == nil then
+		return {}
+	end
+	
+	if #movePath == 0 then
+		return {}
+	end
+	
+	local pathLength = #movePath
+	print("MOVEPATH 1.X :"..movePath[1].X)
+	print("MOVEPATH length :"..pathLength)
+	for k,v in pairs(Game.Map:get_entities("marine")) do
+		if v.Bounds.X == movePath[pathLength].X and  v.Bounds.Y == movePath[pathLength].Y then
+	--		local vane = Game.Map:get_move_path(marine.Id,movePath[#movePath].X,movePath[#movePath].Y)
+			--if #vane <=0 then
+				table.remove(movePath,pathLength)
+				print("Removed : "..#movePath)
+			end
+		end		
+	--end
+	return movePath
 end

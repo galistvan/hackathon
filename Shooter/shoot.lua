@@ -11,6 +11,9 @@ function shootWeapon(marine, x, y)
   local canDoAimed = marine.CanDoAimed;
   print(marine.Id .. " Is going for an aimed shot!!!")
   attackCommand = {Command = "attack", Aimed= canDoAimed, Target = { X = x, Y = y } }
+  if marine.AttackPoints <1 then 
+  return {}
+  end  
   return attackCommand
 end
 
@@ -86,6 +89,8 @@ function returnWeaponRange(weapon, marine)
     return 9+baseAccuracy-3
   elseif(weapon == "w_shotgun") then
     return 4+baseAccuracy-1
+  elseif(weapon == "w_rocketlauncher") then
+    return 10+baseAccuracy-3
   elseif(weapon == "w_machinegun") then
     return 8+baseAccuracy-1
   elseif(weapon == "w_pistol") then

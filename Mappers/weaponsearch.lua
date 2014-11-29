@@ -114,6 +114,8 @@ function weaponUberness(weapon)
     return 14
   elseif(weapon == "w_plasma") then
     return 12
+  elseif(weapon == "w_rocketlauncher") then
+    return 10
   elseif(weapon == "w_chaingun") then
     return 4
   elseif(weapon == "w_shotgun") then
