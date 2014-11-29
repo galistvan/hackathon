@@ -43,7 +43,7 @@ function OwnMarine:provide_steps(prev)
   if whatTodo[1] == "pickUpWeapon" then
     table.insert(Commands, doWeaponPickUp(self, marine, nearestWeapon))
   elseif whatTodo[1] == "attack" then
-    table.insert(Commands, equipWeapon(marine, whatTodo[2][1], whatTodo[2][2], self.availableWeapons, self.availableAmmo))
+    table.insert(Commands, equipWeapon(marine, whatTodo[2][1], whatTodo[2][2]))
     table.insert(Commands, shootWeapon(marine, whatTodo[2][1], whatTodo[2][2]))
   elseif whatTodo[1] == "move" then
     print("Own coords: " .. marineX .. ":" .. marineY .. " Enemy coords: " .. whatTodo[2][1] .. ":" .. whatTodo[2][2])
