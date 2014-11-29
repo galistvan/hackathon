@@ -60,7 +60,7 @@ function makeDecision(marine, nearestEnemy, nearestWeapon)
             action[1]="pickUpWeapon"
             action[2]="";
             action[3]="sprint"
-          elseif(enemyInSight(marine, self.nearestEnemy) > 0) then
+          elseif(enemyInSight(marine, nearestEnemy) > 0) then
             action[1]="attack"
             action[2]={nearestEnemy.Bounds.X, nearestEnemy.Bounds.Y}
             action[3]="unload"
