@@ -111,15 +111,15 @@ function weaponUberness(weapon)
   if(weapon == "grenade") then
     return 2
   elseif(weapon == "w_bfg") then
-    return 7
+    return 10
   elseif(weapon == "w_plasma") then
-    return 5
+    return 6
   elseif(weapon == "w_chaingun") then
-    return 3
-  elseif(weapon == "w_shotgun") then
-    return 2
-  elseif(weapon == "w_machinegun") then
     return 4
+  elseif(weapon == "w_shotgun") then
+    return 3
+  elseif(weapon == "w_machinegun") then
+    return 5
   elseif(weapon == "w_pistol") then
     return 1
   else
