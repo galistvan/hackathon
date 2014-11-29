@@ -3,7 +3,6 @@ function doWeaponPickUp(marine, marineEntity, nearestWeapon)
   if (isStandAboveAWeapon(marineEntity))then
    return { Command = "pickup" }
   end
-  print ("Weapon: " .. nearestWeapon.Type)
   local weaponPath = Game.Map:get_move_path(marineEntity.Id, nearestWeapon.Bounds.X, nearestWeapon.Bounds.Y)
   local movePath = getFirstNItemsFromList(marineEntity.MovePoints, weaponPath)
   return { Command = "move", Path = movePath  }
@@ -45,12 +44,15 @@ function getNearestWeapon(marineEntity)
 --  print("-----")
   local nearestWeapon = weapons[1]
   local shortestPath = Game.Map:get_move_path(marineEntity.Id, nearestWeapon.Bounds.X, nearestWeapon.Bounds.Y)
+  local shortestDistance = #shortestPath
   for _, v in pairs(weapons) do
     local currentPath = Game.Map:get_move_path(marineEntity.Id, v.Bounds.X, v.Bounds.Y)
-    if #currentPath < #shortestPath and #currentPath > 0 and not isIHaveThatWeapon(v, marineEntity) then
+    local baseDistance = #currentPath
+    local weightedDistance = #currentPath - weaponUberness(v.Type)
+    if weightedDistance < shortestDistance and lengthOfArray(currentPath) > 0 and not isIHaveThatWeapon(v, marineEntity) then
       print("Choosen weapon is: " .. v.Type)
       nearestWeapon = v
-      shortestPath = currentPath
+      shortestDistance = weightedDistance
     end
   end
 	return nearestWeapon
@@ -104,4 +106,24 @@ function lengthOfArray(t)
       count = count + 1
   end
   return count 
+end
+
+function weaponUberness(weapon)
+  if(weapon == "grenade") then
+    return 2
+  elseif(weapon == "w_bfg") then
+    return 7
+  elseif(weapon == "w_plasma") then
+    return 5
+  elseif(weapon == "w_chaingun") then
+    return 3
+  elseif(weapon == "w_shotgun") then
+    return 2
+  elseif(weapon == "w_machinegun") then
+    return 4
+  elseif(weapon == "w_pistol") then
+    return 1
+  else
+    return 1
+  end
 end
