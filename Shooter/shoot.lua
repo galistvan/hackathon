@@ -18,8 +18,7 @@ function equipWeapons(marine, x, y)
 	for k, v in pairs(listofWeapons) do
 		if inTable(marine.Inventory, v)	then
 			print ("SHOOT:Equipped weapon " .. v)
-			equipWeaponLocalCommand = {Command = "select_weapon", Weapon = v};
-			return equipWeaponLocalCommand
+			return {Command = "select_weapon", Weapon = v}
 		end
 	end
 end
