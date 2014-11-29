@@ -19,7 +19,7 @@ end
 
 function equipWeapons(marine, x, y)	
   local Command = {}
-	listofWeapons = {"w_bfg", "w_plasma", "w_grenade", "w_shotgun", "w_chaingun", "w_machinegun", "w_pistol", "w_chainsaw", "w_hand"}
+	listofWeapons = {"w_bfg", "w_plasma", "w_rocketlauncher", "w_grenade", "w_shotgun", "w_chaingun", "w_machinegun", "w_pistol", "w_chainsaw", "w_hand"}
 	for k, v in pairs(listofWeapons) do
 		if inTable(marine.Inventory, v) and not inTableB(marine.removedWeapons, v)	then
 		  if(v == "w_grenade" and getDistance(marine,x,y) > 2) then
