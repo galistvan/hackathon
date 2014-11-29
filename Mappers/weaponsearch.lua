@@ -1,12 +1,12 @@
 
 function doWeaponPickUp(marine, marineEntity, nearestWeapon)
-    if (isStandAboveAWeapon(marineEntity) and not isIHaveThatWeapon(nearestWeapon, marineEntity))then
-      return { Command = "pickup" }
-    end
-    weaponPath = Game.Map:get_move_path(marineEntity.Id, nearestWeapon.Bounds.X, nearestWeapon.Bounds.Y)
-    movePath = getFirstNItemsFromList(marineEntity.MovePoints, weaponPath)
-    return { Command = "move", Path = movePath  }
-
+  if (isStandAboveAWeapon(marineEntity) and not isIHaveThatWeapon(nearestWeapon, marineEntity))then
+   return { Command = "pickup" }
+  end
+  local weaponPath = Game.Map:get_move_path(marineEntity.Id, nearestWeapon.Bounds.X, nearestWeapon.Bounds.Y)
+  local movePath = getFirstNItemsFromList(marineEntity.MovePoints, weaponPath)
+  print(marineEntity.Id, "go for weapon", nearestWeapon.Type, "path length", #movePath, "weaponPath", #weaponPath, "pos", "x",marineEntity.Bounds.X,"y",marineEntity.Bounds.Y, "wpos", "x",nearestWeapon.Bounds.X, "y", nearestWeapon.Bounds.Y)
+  return { Command = "move", Path = movePath  }
 end
 
 function printAllEntities()
@@ -27,32 +27,36 @@ function printEntity(entity)
 	print("BlocksPath: " .. tostring(entity.BlocksPath))
 end
 
+function getAllUnOwnedWeapons(marineEntity)
+  local gameEntities = Game.Map:entities_in(0, 0, Game.Map.width, Game.Map.height)
+  local weapons = {}
+  for _, v in pairs(gameEntities) do
+    if isWeapon(v) and not isIHaveThatWeapon(v, marineEntity) then
+      table.insert(weapons, v)
+    end
+  end
+  return weapons
+end
+
 function getNearestWeapon(marineEntity)
-	gameEntities = Game.Map:entities_in(0, 0, Game.Map.width, Game.Map.height)
-	nearestWeapon = nil
-	shortestPath = -1
-	for _, v in pairs(gameEntities) do
-		if isWeapon(v) then
-			if nearestWeapon == nil then
-				currentPath = Game.Map:get_move_path(marineEntity.Id, v.Bounds.X, v.Bounds.Y)
-				if lengthOfArray(currentPath) > 0 then
-					nearestWeapon = v
-					shortestPath = currentPath
-				end 
-			else
-		 		local currentPath = Game.Map:get_move_path(marineEntity.Id, v.Bounds.X, v.Bounds.Y)
-				if lengthOfArray(currentPath) < lengthOfArray(shortestPath) and lengthOfArray(currentPath) > 0 then
-					nearestWeapon = v
-					shortestPath = currentPath
-				end
-			end
-		end
-	end
+  local weapons = getAllUnOwnedWeapons(marineEntity)
+--  print(marineEntity.Id)
+--  for _, v in pairs(weapons) do print(v.Type, v.Bounds.X, v.Bounds.Y) end
+--  print("-----")
+  local nearestWeapon = weapons[1]
+  local shortestPath = Game.Map:get_move_path(marineEntity.Id, nearestWeapon.Bounds.X, nearestWeapon.Bounds.Y)
+  for _, v in pairs(weapons) do
+    local currentPath = Game.Map:get_move_path(marineEntity.Id, v.Bounds.X, v.Bounds.Y)
+    if #currentPath < #shortestPath and #currentPath > 0 then
+      nearestWeapon = v
+      shortestPath = currentPath
+    end
+  end
 	return nearestWeapon
 end
 
 function isWeapon(entity)
-	if	entity.Type == "w_chainsaw" or
+	if	--entity.Type == "w_chainsaw" or
 		entity.Type == "w_machinegun" or
 		entity.Type == "w_shotgun" or
 		entity.Type == "w_plasma" or
@@ -66,7 +70,7 @@ function isWeapon(entity)
 end
 
 function getFirstNItemsFromList(n, list)
-  resultList = {}
+  local resultList = {}
   for i=1,n do 
     table.insert(resultList,list[i])
   end
@@ -74,7 +78,7 @@ function getFirstNItemsFromList(n, list)
 end
 
 function isStandAboveAWeapon(marine) 
-  entities = Game.Map:entities_in(marine.Bounds.X, marine.Bounds.Y, 1, 1)
+  local entities = Game.Map:entities_in(marine.Bounds.X, marine.Bounds.Y, 1, 1)
   for _, v in pairs(entities) do
     if isWeapon(v) then
       return true
@@ -85,8 +89,9 @@ end
 
 function isIHaveThatWeapon(nearestWeapon, marineEntity) 
   for k,v in pairs(marineEntity.Inventory) do
-    if k == nearestWeapon then
-    return true
+    if k.Type == nearestWeapon.Type then
+      print("marine", marineEntity.Id, "type", k.Type)
+      return true
     end
   end
   return false

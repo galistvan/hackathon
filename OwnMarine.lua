@@ -30,6 +30,7 @@ function OwnMarine:select_mode()
   -- return "sprint"
   -- return "guard"
   -- return "ready"
+  print("marine", marine.Id, "set mode to", tostring(whatTodo[3]))
   return whatTodo[3]
 
 end
@@ -45,6 +46,7 @@ function OwnMarine:provide_steps(prev)
   if whatTodo[1] == "pickUpWeapon" then
     print("Going for weapon!")
     table.insert(Commands, doWeaponPickUp(self, marine, nearestWeapon))
+    table.insert(Commands, {Command = "pickup"})
   elseif whatTodo[1] == "heal" then
     print("Going for medkit!")
     table.insert(Commands, getHealth(marine))
@@ -66,6 +68,7 @@ function OwnMarine:provide_steps(prev)
     -- 1 movement 1 shoot
   end
   table.insert(Commands, { Command = "done" })
+  printCommands(Commands) 
   return Commands
 end
 
@@ -90,6 +93,7 @@ function printCommands(table)
 		print("KEY", k,"COMMAND", v.Command)
 	end
 end
+
 function determineAttackPath(marine, x, y)
   local currentPath = Game.Map:get_attack_path(marine.Id, x, y)
   if(#currentPath <= 0) then
