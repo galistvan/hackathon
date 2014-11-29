@@ -13,7 +13,10 @@ function OwnMarine:initialize(player_index, marine_id, instance_index)
   self.actionMode = "advance"
   self.nearestEnemy = ""
   self.nearestWeapon = ""
-  self.shouldGoForWeapons = false;
+  self.shouldGoForWeapons = false
+  self.isSniper= false
+  self.isFrontGuard= false
+  self.isGroundAssault = false
   table.insert(ownMarines,marine_id)
 end
 
@@ -29,6 +32,8 @@ function OwnMarine:select_mode()
   self.nearestEnemy = getNearestEnemy(marine,ownMarines)
   self.nearestWeapon = getNearestWeapon(marine)
 
+  self:setAuras(marine)
+	
   local whatTodo = makeDecision(marine, self.nearestEnemy, self.nearestWeapon)
   
   -- return "sprint"
@@ -42,8 +47,9 @@ end
 function OwnMarine:provide_steps(prev)
   local Commands = {}
   local marine = self:get_marine()
-
   local whatTodo = makeDecision(marine, self.nearestEnemy, self.nearestWeapon)
+  
+
 
   if whatTodo[1] == "pickUpWeapon" then
     print("Marine: " .. marine.Id .. " is Going for weapon!")
@@ -57,6 +63,7 @@ function OwnMarine:provide_steps(prev)
     table.insert(Commands, equipWeapons(marine, whatTodo[2][1], whatTodo[2][2]))
     table.insert(Commands, shootWeapon(marine, whatTodo[2][1], whatTodo[2][2]))
     table.insert(Commands, shootWeapon(marine, whatTodo[2][1], whatTodo[2][2]))
+	
   elseif whatTodo[1] == "move" then
     print("Marine: " .. marine.Id .. " is moving towards enemy!", "target", self.nearestEnemy.Id)
       table.insert(Commands, {Command = "move", Path = whatTodo[4] })
@@ -88,8 +95,6 @@ function OwnMarine:on_knockback(attack, entity)
   print("KNOCKBACK")
 end
 
-
-
 function printTable(table)
   for k, v in pairs( table ) do
     print("KEY", k,"VALUE", v)
@@ -100,4 +105,22 @@ function printCommands(table)
   for k, v in pairs( table ) do
     print("KEY", k,"COMMAND", v.Command)
   end
+end
+
+function OwnMarine:setAuras(myMarine)
+	auras = myMarine.Auras
+	for k,v in pairs(auras) do
+	 if v.Type == "aura_groundassault" then
+		self.isGroundAssault = true
+	 end
+	 
+	 if v.Type == "aura_sniper" then
+		self.isSniper = true
+	 end
+	 
+	 if v.Type == "aura_frontguard" then
+		self.isFrontGuard = true
+	 end
+	
+	end
 end
