@@ -1,29 +1,29 @@
 require 'AI.enemyInSight'
 require 'Shooter.shoot'
 
-function makeDecision(marine, availableWeapons, availableItems, availableAmmo, nearestEnemy, nearestWeapon) 
+function makeDecision(marine, nearestEnemy, nearestWeapon) 
   local action = {}
     if (lengthOfArray(marine.Inventory) <= 2) then
         action[1]="pickUpWeapon"
         action[2]="";
         action[3]="sprint"
           print("Going for weapon!")
-      elseif(enemyInSight(marine, availableWeapons, availableItems, availableAmmo, nearestEnemy, nearestWeapon) <= 0) then 
+      elseif(enemyInSight(marine, nearestEnemy, nearestWeapon) <= 0) then 
         action[1]="move"
         action[2]={nearestEnemy.Bounds.X, nearestEnemy.Bounds.Y}
         action[3]="advance"
-          print("moving towards enemy! Range: " .. enemyInSight(marine, availableWeapons, availableItems, availableAmmo, nearestEnemy, nearestWeapon) .. "Coords: " .. nearestEnemy.Bounds.X .. ":" .. nearestEnemy.Bounds.Y)
+          print("moving towards enemy! Range: " .. enemyInSight(marine, nearestEnemy, nearestWeapon) .. "Coords: " .. nearestEnemy.Bounds.X .. ":" .. nearestEnemy.Bounds.Y)
       else
-        if(getMaximumRange(marine) > enemyInSight(marine, availableWeapons, availableItems, availableAmmo, nearestEnemy, nearestWeapon)) then  
+        if(getMaximumRange(marine) > enemyInSight(marine, nearestEnemy, nearestWeapon)) then  
           action[1]="attack"
           action[2]={nearestEnemy.Bounds.X, nearestEnemy.Bounds.Y}
           action[3]="guard"
-          print("Attacking!! Range: " .. enemyInSight(marine, availableWeapons, availableItems, availableAmmo, nearestEnemy, nearestWeapon) .. "WeaponRange: " .. getMaximumRange(marine, availableWeapons, availableAmmo))
+          print("Attacking!! Range: " .. enemyInSight(marine, nearestEnemy, nearestWeapon) .. "WeaponRange: " .. getMaximumRange(marine))
         else 
           action[1]="move"
           action[2]={nearestEnemy.Bounds.X, nearestEnemy.Bounds.Y}
           action[3]="advance"
-          print("Should move towards and KEEL! Weapon range: " .. getMaximumRange(marine) .. " Enemy range: " .. enemyInSight(marine, availableWeapons, availableItems, availableAmmo, nearestEnemy, nearestWeapon))
+          print("Should move towards and KEEL! Weapon range: " .. getMaximumRange(marine) .. " Enemy range: " .. enemyInSight(marine, nearestEnemy, nearestWeapon))
         end
       end
   return action

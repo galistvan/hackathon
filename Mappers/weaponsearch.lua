@@ -1,6 +1,6 @@
 
 function doWeaponPickUp(marine, marineEntity, nearestWeapon)
-    if (isStandAboveAWeapon(marineEntity) and not marine:isIHaveThatWeapon(nearestWeapon))then
+    if (isStandAboveAWeapon(marineEntity) and not isIHaveThatWeapon(nearestWeapon, marineEntity))then
       return { Command = "pickup" }
     end
     weaponPath = Game.Map:get_move_path(marineEntity.Id, nearestWeapon.Bounds.X, nearestWeapon.Bounds.Y)
@@ -82,6 +82,15 @@ function isStandAboveAWeapon(marine)
     if isWeapon(v) then
       print("we are standing above weapon: " .. v.Type)
       return true
+    end
+  end
+  return false
+end
+
+function isIHaveThatWeapon(nearestWeapon, marineEntity) 
+  for k,v in pairs(marineEntity.Inventory) do
+    if k == nearestWeapon then
+    return true
     end
   end
   return false

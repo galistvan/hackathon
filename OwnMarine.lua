@@ -8,10 +8,7 @@ function OwnMarine:initialize(player_index, marine_id, instance_index)
     self.player_index = player_index
     self.marine_id = marine_id
     self.instance_index = instance_index
-    self.availableWeapons = {"w_hand"}
-    self.availableItems = {}
-    self.availableAmmo = {}
-	Game.register_event_handler(self.HandleEvents, self)
+    self.actionMode = "advance"
 	self.ownMarines= {}
 	table.insert(self.ownMarines,marine_id)
 end
@@ -38,7 +35,7 @@ function OwnMarine:provide_steps(prev)
 	local nearestEnemy = getNearestEnemy(marine,self.ownMarines)
 	local nearestWeapon = getNearestWeapon(marine)
 
-  local whatTodo = makeDecision(marine, self.availableWeapons, self.availabeItems, self.availableAmmo, nearestEnemy, nearestWeapon)
+  local whatTodo = makeDecision(marine, nearestEnemy, nearestWeapon)
 
   if whatTodo[1] == "pickUpWeapon" then
     table.insert(Commands, doWeaponPickUp(self, marine, nearestWeapon))
@@ -66,37 +63,11 @@ function OwnMarine:on_knockback(attack, entity)
 	print("KNOCKBACK")
 end
 
-function OwnMarine:isIHaveThatWeapon(nearestWeapon) 
-	for _,v in pairs(self.availableWeapons) do
-	  if v == nearestWeapon then
-		return true
-	  end
-	end
-	return false
-end
-
 function getMarineCoordX(marine)
 	return marine.Bounds.X
 end
 function getMarineCoordY(marine)
 	return marine.Bounds.Y
-end
-
-function OwnMarine:HandleEvents(name, event) 
-	if name == "EntityPickingUpItem" then
-		print("picking up item: " .. event.Item)
-		table.insert(self.availableWeapons, event.Item)
-		print("currently available weapons: " )
-		printTable(self.availableWeapons)
-	else 
-		if name == "EntityLostItem" then
-			print("lost item: " .. event.Item)
-			table.remove(self.availableWeapons, event.Item)
-			print("currently available weapons: " )
-			printTable(self.availableWeapons)
-		end
-	end
-
 end
 
 function printTable(table) 
