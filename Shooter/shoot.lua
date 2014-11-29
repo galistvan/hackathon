@@ -8,7 +8,9 @@ function equipWeapon(marine, x, y, availableWeapons)
 end
 
 function shootWeapon(marine, x, y)
-  attackCommand = {Command = "attack", Aimed = false, Target = { X = x, Y = y } }
+  attackCommand = {Command = "attack", Target = { X = x, Y = y } }
+  printTable(attackCommand)
+  printTable(attackCommand["Target"])
   return attackCommand
 end
 
