@@ -5,7 +5,6 @@ function doWeaponPickUp(marine, marineEntity, nearestWeapon)
     end
     weaponPath = Game.Map:get_move_path(marineEntity.Id, nearestWeapon.Bounds.X, nearestWeapon.Bounds.Y)
     movePath = getFirstNItemsFromList(marineEntity.MovePoints, weaponPath)
-    print(lengthOfArray(movePath))
     return { Command = "move", Path = movePath  }
 
 end
