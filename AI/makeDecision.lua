@@ -18,7 +18,7 @@ function makeDecision(marine, nearestEnemy, nearestWeapon)
         action[1] = "movetokill"
         action[2] = {nearestEnemy.Bounds.X, nearestEnemy.Bounds.Y}
         action[3] = "advance"
-          action[4]=movePath
+        action[4]=reformMovePath(movePath, marine, nearestEnemy)
       else
         -- we can also wait and aim to have a better shot at it or dodge, depending on our health/his weapon
         local movePath = determineAttackPath(marine, nearestEnemy.Bounds.X, nearestEnemy.Bounds.Y)
@@ -31,7 +31,7 @@ function makeDecision(marine, nearestEnemy, nearestWeapon)
           action[1]="move"
           action[2]={nearestEnemy.Bounds.X, nearestEnemy.Bounds.Y}
           action[3]="sprint"
-          action[4]=movePath
+          action[4]=reformMovePath(movePath, marine, nearestEnemy)
         end
       end
     else
@@ -46,7 +46,7 @@ function makeDecision(marine, nearestEnemy, nearestWeapon)
             action[1]="backandkill"
             action[2]={nearestEnemy.Bounds.X, nearestEnemy.Bounds.Y}
             action[3]="advance"
-            action[4]=movePath
+            action[4]=reformMovePath(movePath, marine, nearestEnemy)
           end
         else
           action[1]="attack"
@@ -55,7 +55,7 @@ function makeDecision(marine, nearestEnemy, nearestWeapon)
         end
       else
         local movePath = determineAttackPath(marine, nearestEnemy.Bounds.X, nearestEnemy.Bounds.Y)
-        if(#movePath == 0 and enemyInSight(marine, self.nearestEnemy) == -1) then
+        if(#movePath == 0 and enemyInSight(marine, nearestEnemy) == -1) then
           action[1]="pickUpWeapon"
           action[2]="";
           action[3]="sprint"
@@ -63,16 +63,25 @@ function makeDecision(marine, nearestEnemy, nearestWeapon)
           action[1]="attack"
           action[2]={nearestEnemy.Bounds.X, nearestEnemy.Bounds.Y}
           action[3]="unload"
-        elseif(Game.Map.cell_has_los(movePath[marine.MovePoints].X, movePath[marine.MovePoints].Y, nearestEnemy.Bounds.X, nearestEnemy.Bounds.Y, "ObstaclesAndEntities")) then
+        elseif(Game.Map:cell_has_los(movePath[marine.MovePoints].X, movePath[marine.MovePoints].Y, nearestEnemy.Bounds.X, nearestEnemy.Bounds.Y, "ObstaclesAndEntities")) then
+          local finalMovePath = reformMovePath(movePath, marine, nearestEnemy)
+          local finalDestination = finalMovePath[#finalMovePath]
+          if(Game.Map:cell_has_los(finalDestination.X, finalDestination.Y, nearestEnemy.Bounds.X, nearestEnemy.Bounds.Y, "ObstaclesAndEntities")) then
           action[1]="movetokill"
           action[2]={nearestEnemy.Bounds.X, nearestEnemy.Bounds.Y}
           action[3]="advance"
-          action[4]=movePath
+          action[4]=finalMovePath
+          else
+          action[1]="moveandaim"
+          action[2]={nearestEnemy.Bounds.X, nearestEnemy.Bounds.Y}
+          action[3]="ready"
+          action[4]=finalMovePath
+          end
         else
           action[1]="move"
           action[2]={nearestEnemy.Bounds.X, nearestEnemy.Bounds.Y}
           action[3]="sprint"
-          action[4]=movePath
+          action[4]=reformMovePath(movePath, marine, nearestEnemy)
         end
       
       
@@ -130,4 +139,13 @@ function checkIfMovingOnceEnablesLos(marine, enemy)
   local attackPath = Game.Map:get_attack_path(marine.Id, nearestEnemy.Bounds.X, nearestEnemy.Bounds.Y)
   if(lengthOfArray(attackPath) <= 4) then return true end
   return Game.Map:cell_has_los(attackPath[4].X, attackPath[4].Y, enemy.Bounds.X, enemy.Bounds.Y, "ObstaclesAndEntities")
+end
+
+function reformMovePath(movePath, marine, enemy)
+  for i = lengthOfArray(movePath), 2, -1 do
+    if(Game.Map:cell_has_los(movePath[i-1].X, movePath[i-1].Y, enemy.Bounds.X, enemy.Bounds.Y, "ObstaclesAndEntities") and lengthOfArray(Game.Map:get_move_path(marine.Id, movePath[i-1].X, movePath[i-1].Y)) > 0) then
+      table.remove(movePath,i)
+    end
+  end
+  return movePath
 end

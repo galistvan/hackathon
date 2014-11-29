@@ -69,6 +69,9 @@ function OwnMarine:provide_steps(prev)
       table.insert(Commands, {Command = "move", Path = whatTodo[4] })
       table.insert(Commands, equipWeapons(marine, whatTodo[2][1], whatTodo[2][2]))
       table.insert(Commands, shootWeapon(marine, whatTodo[2][1], whatTodo[2][2]))
+  elseif whatTodo[1] == "moveandaim" then
+    print("Marine: " .. marine.Id .. " is moving towards and shooting ", "target", self.nearestEnemy.Id)
+      table.insert(Commands, {Command = "move", Path = whatTodo[4] })
   end
   table.insert(Commands, { Command = "done" })
   return Commands
