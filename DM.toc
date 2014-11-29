@@ -6,4 +6,3 @@ AI\makeDecision.lua
 AI\enemyInSight.lua
 Mappers\weaponsearch.lua
 Actions\Health.lua
-Mappers\itemFinder.lua
