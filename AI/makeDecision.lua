@@ -8,7 +8,7 @@ function makeDecision(marine, nearestEnemy, nearestWeapon)
     action[2]=""
     action[3]="sprint"
   else
-    if (lengthOfArray(marine.Inventory) <= 2 or nearestEnemy == nil) then
+    if ((lengthOfArray(marine.Inventory) <= 2 or nearestEnemy == nil) or marine.shouldGoForWeapons) then
       action[1]="pickUpWeapon"
       action[2]="";
       action[3]="sprint"

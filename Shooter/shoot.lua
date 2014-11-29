@@ -27,6 +27,7 @@ function equipWeapons(marine, x, y)
   			  return {Command = "select_weapon", Weapon = v}
 			  else
           print ("SHOOT:Defaulting to pistol ")
+          marine.shouldGoForWeapons = true
           return {Command = "select_weapon", Weapon = "w_pistol"}
 			  end
 			end

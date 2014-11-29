@@ -13,6 +13,7 @@ function OwnMarine:initialize(player_index, marine_id, instance_index)
   self.ownMarines= {}
   self.nearestEnemy = ""
   self.nearestWeapon = ""
+  self.shouldGoForWeapons = false;
   table.insert(self.ownMarines,marine_id)
 end
 
