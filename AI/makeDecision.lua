@@ -113,14 +113,14 @@ function determineRetreatPath(marine, x, y)
   local retreatXDirection = marine.Bounds.X - x;
   local retreatYDirection = marine.Bounds.Y - y;
   if(retreatXDirection <= 0) then
-    retreatXCoords = {marine.Bounds.X -2, marine.Bounds.X -3, marine.Bounds.X -4}
+    retreatXCoords = {marine.Bounds.X -2, marine.Bounds.X -3}
   else
-    retreatXCoords = {marine.Bounds.X +2, marine.Bounds.X +3, marine.Bounds.X +4}
+    retreatXCoords = {marine.Bounds.X +2, marine.Bounds.X +3}
   end
   if(retreatYDirection <= 0) then
-    retreatYCoords = {marine.Bounds.Y -2, marine.Bounds.Y -3, marine.Bounds.Y -4}
+    retreatYCoords = {marine.Bounds.Y -2, marine.Bounds.Y -3}
   else
-    retreatYCoords = {marine.Bounds.Y +2, marine.Bounds.Y +3, marine.Bounds.Y +4}
+    retreatYCoords = {marine.Bounds.Y +2, marine.Bounds.Y +3}
   end
   for kx,vx in ipairs(retreatXCoords) do
     for ky,vy in ipairs(retreatYCoords) do
