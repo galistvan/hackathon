@@ -49,7 +49,7 @@ function OwnMarine:provide_steps(prev)
     print("Own coords: " .. marineX .. ":" .. marineY .. " Enemy coords: " .. whatTodo[2][1] .. ":" .. whatTodo[2][2])
     
     currentPath = Game.Map:get_move_path(marine.Id, whatTodo[2][1], whatTodo[2][2])
-	  movePath = getFirstNItemsFromList(marine.MovePoints, currentPath)
+	  movePath = lolGetFirstNItemsFromList(marine.MovePoints, currentPath)
     table.insert(Commands, {Command = "move", Path = movePath })
   end
       table.insert(Commands, { Command = "done" })
@@ -97,4 +97,13 @@ function printTable(table)
 	for k, v in pairs( table ) do
 		print(k, v)
 	end
+end
+
+
+function lolGetFirstNItemsFromList(n, list)
+  resultList = {}
+  for i=1,n do 
+    table.insert(resultList,list[i])
+  end
+  return resultList
 end

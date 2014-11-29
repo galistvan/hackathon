@@ -2,7 +2,9 @@ require 'AI.enemyInSight'
 
 function makeDecision(marine, availableWeapons, availableItems, availableAmmo, nearestEnemy, nearestWeapon) 
   local action = {}
-    if (#marine.Inventory <= 2) then
+  print("MARINEINV:::")
+  print(lengthOfArray(marine.Inventory))
+    if (lengthOfArray(marine.Inventory) <= 2) then
         action[1]="pickUpWeapon"
         action[2]="";
         action[3]="sprint"
@@ -26,4 +28,12 @@ function makeDecision(marine, availableWeapons, availableItems, availableAmmo, n
         end
       end
   return action
+end
+
+function lengthOfArray(t)
+  count = 0
+  for k,v in pairs(t) do
+      count = count + 1
+  end
+  return count 
 end
