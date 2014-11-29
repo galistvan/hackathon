@@ -16,10 +16,10 @@ function makeDecision(marine, nearestEnemy, nearestWeapon)
       elseif(enemyInSight(marine, nearestEnemy) <= 0) then
         if(checkIfMovingOnceEnablesLos(marine, nearestEnemy)) then
           local movePath = determineAttackPath(marine, nearestEnemy.Bounds.X, nearestEnemy.Bounds.Y)
-          action[1] = "moveandaim"
+          action[1] = "movetokill"
           action[2] = {nearestEnemy.Bounds.X, nearestEnemy.Bounds.Y}
           action[3] = "ready"
-          action[4]=reformMovePath(movePath, marine, nearestEnemy)
+          action[4]=movePath, marine, nearestEnemy
         else
           -- we can also wait and aim to have a better shot at it or dodge, depending on our health/his weapon
           local movePath = determineAttackPath(marine, nearestEnemy.Bounds.X, nearestEnemy.Bounds.Y)
@@ -32,7 +32,7 @@ function makeDecision(marine, nearestEnemy, nearestWeapon)
             action[1]="move"
             action[2]={nearestEnemy.Bounds.X, nearestEnemy.Bounds.Y}
             action[3]="sprint"
-            action[4]=reformMovePath(movePath, marine, nearestEnemy)
+            action[4]=movePath
           end
         end
       else
@@ -47,7 +47,7 @@ function makeDecision(marine, nearestEnemy, nearestWeapon)
               action[1]="backandkill"
               action[2]={nearestEnemy.Bounds.X, nearestEnemy.Bounds.Y}
               action[3]="advance"
-              action[4]=reformMovePath(movePath, marine, nearestEnemy)
+              action[4]=movePath
             end
           else
             action[1]="attack"
@@ -89,7 +89,7 @@ function makeDecision(marine, nearestEnemy, nearestWeapon)
             action[1]="move"
             action[2]={nearestEnemy.Bounds.X, nearestEnemy.Bounds.Y}
             action[3]="sprint"
-            action[4]=reformMovePath(movePath, marine, nearestEnemy)
+            action[4]=movePath, marine, nearestEnemy
           end
 
 
