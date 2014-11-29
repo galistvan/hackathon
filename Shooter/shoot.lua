@@ -9,7 +9,9 @@ end
 
 function shootWeapon(marine, x, y)
   local canDoAimed = marine.CanDoAimed;
-  print(marine.Id .. " Is going for an aimed shot!!!")
+  if (canDoAimed) then
+    print(marine.Id .. " Is going for an aimed shot!!!")
+  end
   attackCommand = {Command = "attack", Aimed= canDoAimed, Target = { X = x, Y = y } }
   return attackCommand
 end
