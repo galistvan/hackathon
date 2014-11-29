@@ -7,23 +7,19 @@ function makeDecision(marine, nearestEnemy, nearestWeapon)
         action[1]="pickUpWeapon"
         action[2]="";
         action[3]="sprint"
-          print("Going for weapon!")
       elseif(enemyInSight(marine, nearestEnemy, nearestWeapon) <= 0) then 
         action[1]="move"
         action[2]={nearestEnemy.Bounds.X, nearestEnemy.Bounds.Y}
         action[3]="advance"
-          print("moving towards enemy! Range: " .. enemyInSight(marine, nearestEnemy, nearestWeapon) .. "Coords: " .. nearestEnemy.Bounds.X .. ":" .. nearestEnemy.Bounds.Y)
       else
         if(getMaximumRange(marine) > enemyInSight(marine, nearestEnemy, nearestWeapon)) then  
           action[1]="attack"
           action[2]={nearestEnemy.Bounds.X, nearestEnemy.Bounds.Y}
-          action[3]="guard"
-          print("Attacking!! Range: " .. enemyInSight(marine, nearestEnemy, nearestWeapon) .. "WeaponRange: " .. getMaximumRange(marine))
+          action[3]="unload"
         else 
           action[1]="move"
           action[2]={nearestEnemy.Bounds.X, nearestEnemy.Bounds.Y}
           action[3]="advance"
-          print("Should move towards and KEEL! Weapon range: " .. getMaximumRange(marine) .. " Enemy range: " .. enemyInSight(marine, nearestEnemy, nearestWeapon))
         end
       end
   return action
