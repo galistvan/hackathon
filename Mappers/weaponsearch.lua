@@ -50,7 +50,6 @@ function getNearestWeapon(marineEntity)
     local baseDistance = #currentPath
     local weightedDistance = #currentPath - weaponUberness(v.Type)
     if weightedDistance < shortestDistance and lengthOfArray(currentPath) > 0 and not isIHaveThatWeapon(v, marineEntity) then
-      print("Choosen weapon is: " .. v.Type)
       nearestWeapon = v
       shortestDistance = weightedDistance
     end
